@@ -4,26 +4,17 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Bootstrap demo</title>
+    <title>HMS</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous">
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-
-
 </head>
 
 <body>
     <div id="app">
-
-
-        <div class="col m-1">
+        <div class="col mt-5">
             <div class="container">
-                <h2 class="mb-5">Metrics <button type="button" class="btn btn-info" @click="fetchData"
-                        :disabled="loading">
-                        {{ loading ? 'Fetching...' : 'Fetch Data' }}
-                    </button></h2>
-
                 <div class="row">
                     <div class="col-sm-6 col-md-4 col-lg-3 mb-3">
                         <div class="card bg-light shadow-sm">
@@ -70,10 +61,15 @@
         </div>
         <div class="row">
             <div class="col m-5">
-                <div>
-                    <label for="formFileLg" class="form-label">Upload Reference Values</label>
-                    <input class="form-control form-control-lg" id="formFileLg" type="file">
+                <div class="row">
+                    <div class="col">
+                        <label for="formFileLg" class="form-label">Upload Reference Values</label>
+                        <input class="form-control form-control-lg" id="formFileLg" type="file"
+                            @change="handleFileUpload">
+                    </div>
+
                 </div>
+
 
                 <hr>
                 <div>
@@ -86,7 +82,6 @@
                                 <th>Unit</th>
                                 <th>Label</th>
                                 <th>Value</th>
-                                <!-- <th>Status</th> -->
                                 <th>Difference</th>
                                 <th>Result</th>
                                 <th>Expected Range</th>
@@ -101,9 +96,7 @@
                                     <td>{{ result.unit || item.unit }}</td>
                                     <td>{{ result.label }}</td>
                                     <td>{{ result.value }}</td>
-                                    <!-- <td
-                                        :class="{'text-danger fw-bold': result.status === 'out of range', 'text-success': result.status === 'within range'}">
-                                        {{ result.status }}</td> -->
+
                                     <td>{{ result.difference }}</td>
                                     <td
                                         :class="{'text-warning fw-bold': result.result === 'hypo', 'text-success': result.result === 'normal', 'text-danger fw-bold': result.result === 'hyper',}">
@@ -142,12 +135,33 @@
                             loading.value = false;
                         }
                     };
+                    const handleFileUpload = async (event) => {
+                        console.log('File upload event triggered');
+                        const file = event.target.files[0];
+                        if (file) {
+                            const formData = new FormData();
+                            formData.append('file', file);
+                            try {
+                                const response = await axios.post('/edge-servers/upload-excel', formData, {
+                                    headers: {
+                                        'Content-Type': 'multipart/form-data'
+                                    }
+                                });
+                                console.log('File uploaded successfully:', response.data);
+                                data.value = response.data;
+
+                            } catch (error) {
+                                console.error('Error uploading file:', error);
+                            }
+                        }
+                    };
 
                     return {
                         data,
                         loading,
                         error,
-                        fetchData
+                        fetchData,
+                        handleFileUpload
                     };
                 }
             }).mount('#app');

@@ -64,9 +64,7 @@ export class EdgeServersController {
     const data: any = XLSX.utils.sheet_to_json(sheet, { header: 1 }); // 2D array
 
     try {
-      return {
-        data: 'processedData',
-      };
+      return this.edgeServersService.runtest(testInputs);
     } catch (error) {
       return {
         message: 'Error in processing uploaded data',
