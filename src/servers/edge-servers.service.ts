@@ -1,6 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { CreateEdgeServerDto } from './dto/create-edge-server.dto';
 import { ref_values } from '../util/util-data/reference-values';
+import { compareTransmissionTimes } from './util-functions/transmissionTime';
+import { cloudServer, edgeServer } from './dto/servers.data';
 
 @Injectable()
 export class EdgeServersService {
@@ -20,6 +22,9 @@ export class EdgeServersService {
       );
       result.push(returnedData);
     }
+
+    let x = compareTransmissionTimes(data, edgeServer, cloudServer)
+    console.log(x)
     return result;
   }
   checkHealthParameter(age, sex, key, inputValues) {
@@ -85,14 +90,14 @@ export class EdgeServersService {
       });
     }
 
-    console.log({
-      measured_parameter: param.measured_parameter,
-      key,
-      age,
-      sex,
-      unit,
-      results,
-    });
+    // console.log({
+    //   measured_parameter: param.measured_parameter,
+    //   key,
+    //   age,
+    //   sex,
+    //   unit,
+    //   results,
+    // });
 
     return {
       measured_parameter: param.measured_parameter,
