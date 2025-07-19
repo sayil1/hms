@@ -9,6 +9,15 @@
         integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous">
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
 </head>
 
 <body>
@@ -17,26 +26,28 @@
             <div class="container">
                 <div class="row">
                     <div class="col-sm-6 col-md-4 col-lg-3 mb-3">
-                        <div class="card bg-light shadow-sm">
+                        <div class="card bg-light shadow-sm" type="button" class="btn btn-primary" data-toggle="modal"
+                            data-target=".bd-example-modal-lg" @click="displayTransmissionTime">
                             <div class="card-body text-center">
-                                <h5 class="card-title text-primary"><i class="bi bi-calculator me-2"></i> T
-                                    <sub>r</sub>
-                                </h5>
-                                <p class="card-text display-6">42.7</p>
-                                <p class="card-text text-muted small">Transmission Time</p>
+                                <p class="card-text display-6 text-primary">
+                                    Transmission Time
+                                </p>
+                                <p class="card-text text-muted small">Click to view</p>
                             </div>
                         </div>
                     </div>
                     <div class="col-sm-6 col-md-4 col-lg-3 mb-3">
-                        <div class="card bg-light shadow-sm">
+                        <div class="card bg-light shadow-sm" type="button" class="btn btn-primary" data-toggle="modal"
+                            data-target=".bd-example-modal-lg" @click="displayTransmissionCost">
                             <div class="card-body text-center">
-                                <h5 class="card-title text-success"><i class="bi bi-graph-up me-2"></i>TC</h5>
-                                <p class="card-text display-6">55</p>
-                                <p class="card-text text-muted small">Transmission Cost</p>
+                                <p class="card-text display-6 text-primary">
+                                    Transmission Cost
+                                </p>
+                                <p class="card-text text-muted small">Click to view</p>
                             </div>
                         </div>
                     </div>
-                    <div class="col-sm-6 col-md-4 col-lg-3 mb-3">
+                    <!-- <div class="col-sm-6 col-md-4 col-lg-3 mb-3">
                         <div class="card bg-light shadow-sm">
                             <div class="card-body text-center">
                                 <h5 class="card-title text-info"><i class="bi bi-list-ol me-2"></i> WT</h5>
@@ -55,10 +66,54 @@
                                 <p class="card-text text-muted small">Execution Time</p>
                             </div>
                         </div>
+                    </div> -->
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+
+                    <h4 class="card-title m-3">{{dialog_Heading}}</h4>
+
+                    <div class="row">
+                        <div class="col m-2">
+                            <h5 class="card-title m-2">Cloud</h5>
+
+                            <ul class="list-group">
+                                <li v-for="(item, index) in dialogData?.results" :key="index"
+                                    class="list-group-item d-flex justify-content-between align-items-center">
+                                    {{ JSON.stringify(item.id) }}
+                                    <span>{{item.cloud}}</span>
+                                </li>
+
+                            </ul>
+                            <h5 class="card-title m-3">Average {{dialogData?.averages?.cloud}} </h5>
+                        </div>
+                        <div class=" col m-2">
+                            <h5 class="card-title m-2">Edge </h5>
+
+                            <ul class="list-group">
+                                <li v-for="(item, index) in dialogData?.results" :key="index"
+                                    class="list-group-item d-flex justify-content-between align-items-center">
+                                    {{ JSON.stringify(item.id) }}
+                                    <span>{{item.edge}} </span>
+                                </li>
+
+                            </ul>
+                            <h5 class="card-title m-3">Average {{dialogData?.averages?.edge}}</h5>
+
+                        </div>
+
+
                     </div>
                 </div>
             </div>
         </div>
+
+
         <div class="row">
             <div class="col m-5">
                 <div class="row">
@@ -120,6 +175,11 @@
                     const data = ref(null);
                     const loading = ref(false);
                     const error = ref(null);
+                    const dialogData = ref(null);
+                    const transmission_time = ref(null)
+                    const transmission_cost = ref(null)
+                    const dialog_Heading = ref(null);
+
 
                     const fetchData = async () => {
                         loading.value = true;
@@ -135,6 +195,17 @@
                             loading.value = false;
                         }
                     };
+
+                    const displayTransmissionTime = () => {
+                        dialogData.value = transmission_time.value;
+                        dialog_Heading.value = 'Transmission Time';
+                    };
+
+                    const displayTransmissionCost = () => {
+                        dialogData.value = transmission_cost.value;
+                        dialog_Heading.value = 'Transmission Cost';
+                    };
+
                     const handleFileUpload = async (event) => {
                         console.log('File upload event triggered');
                         const file = event.target.files[0];
@@ -147,8 +218,12 @@
                                         'Content-Type': 'multipart/form-data'
                                     }
                                 });
-                                console.log('File uploaded successfully:', response.data);
-                                data.value = response.data;
+                                data.value = response.data.health_parameter;
+                                transmission_time.value = response.data.transmission_time;
+                                transmission_cost.value = response.data.transmission_cost;
+                                console.log('File uploaded successfully:', transmission_time, data, transmission_cost);
+
+
 
                             } catch (error) {
                                 console.error('Error uploading file:', error);
@@ -161,7 +236,13 @@
                         loading,
                         error,
                         fetchData,
-                        handleFileUpload
+                        handleFileUpload,
+                        transmission_time,
+                        transmission_cost,
+                        displayTransmissionTime,
+                        displayTransmissionCost,
+                        dialogData,
+                        dialog_Heading
                     };
                 }
             }).mount('#app');

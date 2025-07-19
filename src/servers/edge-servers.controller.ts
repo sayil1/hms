@@ -21,7 +21,7 @@ import { testInputs } from './dto/test.input';
 @ApiTags('edge-servers')
 @Controller('edge-servers')
 export class EdgeServersController {
-  constructor(private readonly edgeServersService: EdgeServersService) {}
+  constructor(private readonly edgeServersService: EdgeServersService) { }
 
   @Post()
   create(@Body() createEdgeServerDto: any) {
@@ -66,6 +66,7 @@ export class EdgeServersController {
     try {
       return this.edgeServersService.runtest(testInputs);
     } catch (error) {
+      console.log(error, "error")
       return {
         message: 'Error in processing uploaded data',
       };

@@ -1,42 +1,55 @@
-
-
 export const edgeServer = {
   id: "edge-server-zur01",
   type: "Edge",
 
-  processingPower: 15000,         // MIPS (Millions of Instructions Per Second). Corresponds to α(Rₑ)
-  processingCostPerSecond: 0.00003, // Cost to use the CPU. Corresponds to Cᵣₑ
+  // Processing
+  processingPower: 15000,             // MIPS → α(Rₑ)
+  processingCostPerSecond: 0.00003,   // CPU cost per second → Cᵣₑ
 
-  // Transmission Properties (from sections i, ii)
-  // This represents the link from the IoT device to the edge server.
-  bandwidth: 100,                 // MB/s. Corresponds to β(Rₑ)
-  bandwidthCostPerSecond: 0.002,  // Cost of data transfer. Corresponds to Cᵦ
+  // Transmission (IoT → Edge)
+  bandwidth: 100,                     // MB/s → β(Rₑ)
+  bandwidthCostPerSecond: 0.002,      // Data transfer cost → Cᵦₑ (Edge transmission cost)
 
-  // Queuing Properties (from sections iii, iv)
-  queueCostPerSecond: 0.000005,   // Cost to store a task in the queue. Corresponds to c_queue
+  // Queuing (task waiting in queue)
+  queueCostPerSecond: 0.000005,       // Cost for task waiting → C_queueₑ
 
-  // Energy Properties (from section ix)
-  powerConsumption: 200,          // Watts (Joules/second) under load. Corresponds to p(u(t))
-  energyCostPerUnit: 0.00000005,  // Cost per Joule. Corresponds to Cᵣ in the energy cost formula
+  // Energy
+  powerConsumption: 200,              // Watts (J/s) → pₑ(u(t))
+  energyCostPerUnit: 0.00000005,      // Cost per Joule → C_energyₑ
+
+  // Derived Cost Labels
+  costLabels: {
+    transmission: "Transmission Cost to Edge",
+    execution: "Execution Cost at Edge",
+    waiting: "Waiting Cost at Edge",
+    energy: "Energy Cost at Edge"
+  }
 };
 
 export const cloudServer = {
   id: "cloud-vm-central-eu-1",
   type: "Cloud",
 
-  // Execution Properties (from sections v, vi)
-  processingPower: 120000,        // MIPS. Corresponds to α(R_c)
-  processingCostPerSecond: 0.00018, // Cost to use the CPU. Corresponds to Cᵣ_c
+  // Processing
+  processingPower: 120000,
+  processingCostPerSecond: 0.00018,
 
-  // Transmission Properties (from sections i, ii)
-  // This represents the link from the edge to the cloud server.
-  bandwidth: 1000,                // MB/s. Corresponds to β(R_c)
-  bandwidthCostPerSecond: 0.008,  // Cost of data transfer. Corresponds to Cᵦ
+  // Transmission (Edge → Cloud)
+  bandwidth: 1000,
+  bandwidthCostPerSecond: 0.008,       // Data transfer cost → Cᵦ_c (Cloud transmission cost)
 
-  // Queuing Properties (from sections iii, iv)
-  queueCostPerSecond: 0.000015,   // Cost to store a task in the queue. Corresponds to c_queue
+  // Queuing
+  queueCostPerSecond: 0.000015,        // Cost for task waiting → C_queue_c
 
-  // Energy Properties (from section ix)
-  powerConsumption: 600,          // Watts (Joules/second) under load. Corresponds to p(u(t))
-  energyCostPerUnit: 0.00000003,  // Cost per Joule (often cheaper due to bulk rates). Corresponds to Cᵣ
+  // Energy
+  powerConsumption: 600,               // Watts → p_c(u(t))
+  energyCostPerUnit: 0.00000003,       // Cost per Joule → C_energy_c
+
+  // Derived Cost Labels
+  costLabels: {
+    transmission: "Transmission Cost to Cloud",
+    execution: "Execution Cost at Cloud",
+    waiting: "Waiting Cost at Cloud",
+    energy: "Energy Cost at Cloud"
+  }
 };

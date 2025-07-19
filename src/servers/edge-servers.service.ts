@@ -3,6 +3,7 @@ import { CreateEdgeServerDto } from './dto/create-edge-server.dto';
 import { ref_values } from '../util/util-data/reference-values';
 import { compareTransmissionTimes } from './util-functions/transmissionTime';
 import { cloudServer, edgeServer } from './dto/servers.data';
+import { calculateTransmissionCost } from './util-functions/transmissionCost';
 
 @Injectable()
 export class EdgeServersService {
@@ -23,10 +24,16 @@ export class EdgeServersService {
       result.push(returnedData);
     }
 
-    let x = compareTransmissionTimes(data, edgeServer, cloudServer)
-    console.log(x)
-    return result;
+    let transmission_time = compareTransmissionTimes(data, edgeServer, cloudServer)
+    let transmission_cost = calculateTransmissionCost(data, edgeServer, cloudServer)
+    return {
+      health_parameter: result,
+      transmission_time: transmission_time,
+      transmission_cost: transmission_cost
+    };
   }
+
+
   checkHealthParameter(age, sex, key, inputValues) {
     const param = ref_values.find((p) => p.key === key);
     if (!param) return { error: `Invalid parameter key: ${key}` };
@@ -59,10 +66,6 @@ export class EdgeServersService {
         continue;
       }
 
-      // const withinRange =
-      //   inputValue >= lower_bound && inputValue <= upper_bound;
-      // const difference = withinRange ? 0 : inputValue < lower_bound ? +(lower_bound - inputValue).toFixed(2) : +(inputValue - upper_bound).toFixed(2);
-
       let difference;
       const withinRange =
         inputValue >= lower_bound && inputValue <= upper_bound;
@@ -70,19 +73,17 @@ export class EdgeServersService {
 
       if (withinRange) {
         difference = 0;
-        result = 'normal'; // Or you can set it to an empty string, or handle it differently
+        result = 'normal';
       } else if (inputValue < lower_bound) {
         difference = +(lower_bound - inputValue).toFixed(2);
         result = 'hypo';
       } else {
-        // inputValue > upper_bound
         difference = +(inputValue - upper_bound).toFixed(2);
         result = 'hyper';
       }
       results.push({
         label,
         value: inputValue,
-        // status: withinRange ? 'within range' : 'out of range',
         difference,
         unit,
         expected_range: { lower_bound, upper_bound },
