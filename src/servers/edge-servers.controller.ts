@@ -17,6 +17,7 @@ import { ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ref_values } from '../util/util-data/reference-values';
 import { testInputs } from './dto/test.input';
+import { transformData } from './dto/xlsdatatojson';
 
 @ApiTags('edge-servers')
 @Controller('edge-servers')
@@ -61,10 +62,11 @@ export class EdgeServersController {
     const sheetName = workbook.SheetNames[0];
     const sheet = workbook.Sheets[sheetName];
 
-    const data: any = XLSX.utils.sheet_to_json(sheet, { header: 1 }); // 2D array
+    const xlsdata: any = XLSX.utils.sheet_to_json(sheet, { header: 1 }); // 2D array
+    const data = transformData(xlsdata);
 
     try {
-      return this.edgeServersService.runtest(testInputs);
+      return this.edgeServersService.runtest(data);
     } catch (error) {
       console.log(error, "error")
       return {
