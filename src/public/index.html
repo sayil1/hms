@@ -90,7 +90,13 @@
                                 </li>
 
                             </ul>
-                            <h5 class="card-title m-3">Average {{dialogData?.averages?.cloud}} </h5>
+
+                            <h5 class="card-title m-3 col">Average {{dialogData?.averages?.cloud}}
+                                {{dialogData?.unit}}</h5>
+                            <h5 class="card-title m-3 col">Total {{dialogData?.total?.cloud}}
+                                {{dialogData?.unit}}</h5>
+
+
                         </div>
                         <div class=" col m-2">
                             <h5 class="card-title m-2">Edge </h5>
@@ -103,8 +109,11 @@
                                 </li>
 
                             </ul>
-                            <h5 class="card-title m-3">Average {{dialogData?.averages?.edge}}</h5>
 
+                            <h5 class="card-title m-3 col">Average {{dialogData?.averages?.edge}} {{dialogData?.unit}}
+                            </h5>
+                            <h5 class="card-title m-3 col">Total {{dialogData?.total?.edge}} {{dialogData?.unit}}
+                            </h5>
                         </div>
 
 
@@ -179,6 +188,8 @@
                     const transmission_time = ref(null)
                     const transmission_cost = ref(null)
                     const dialog_Heading = ref(null);
+                    const unit = ref(null);
+                    const total = ref(0);
 
 
                     const fetchData = async () => {
@@ -199,6 +210,7 @@
                     const displayTransmissionTime = () => {
                         dialogData.value = transmission_time.value;
                         dialog_Heading.value = 'Transmission Time';
+
                     };
 
                     const displayTransmissionCost = () => {

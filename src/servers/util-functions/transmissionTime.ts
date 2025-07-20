@@ -37,21 +37,26 @@ export function compareTransmissionTimes(
             edge: parseFloat(edgeData.toFixed(6)),
             cloud: parseFloat(cloudData.toFixed(6)),
             betterServer: edgeData < cloudData ? "Edge" : "Cloud",
-            unit: 'seconds'
+
         };
     });
-    const averages = calculateAverageTimes(results);
+    const count = results.length;
 
-    return { results, averages };
-}
-
-function calculateAverageTimes(results) {
-    const edgeSum = results.reduce((sum, item) => sum + item.edgeTime, 0);
-    const cloudSum = results.reduce((sum, item) => sum + item.cloudTime, 0);
 
     return {
-        edge: edgeSum / results.length,
-        cloud: cloudSum / results.length
+
+        results,
+        averages: {
+            edge: +(totalEdgeTime / count).toFixed(6),
+            cloud: +(totalCloudTime / count).toFixed(6),
+            averageTransmissionCost: +((totalEdgeTime + totalCloudTime) / count).toFixed(6),
+        },
+        total: {
+            edge: +totalEdgeTime.toFixed(6),
+            cloud: +totalCloudTime.toFixed(6),
+        },
+        unit: 'seconds'
     };
 }
+
 

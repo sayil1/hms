@@ -17,6 +17,11 @@ type TransmissionCostSummary = {
         cloud: number;
         averageTransmissionCost: number;
     };
+    total: {
+        edge: number;
+        cloud: number;
+    };
+    unit: string;
 };
 
 
@@ -48,6 +53,8 @@ export function calculateTransmissionCost(
             edge: +edgeCost.toFixed(6),
             cloud: +cloudCost.toFixed(6),
             betterServer: edgeCost < cloudCost ? 'Edge' : 'Cloud',
+
+
         };
     });
 
@@ -62,6 +69,11 @@ export function calculateTransmissionCost(
                 cloud: 0,
                 averageTransmissionCost: 0,
             },
+            total: {
+                edge: 0,
+                cloud: 0,
+            },
+            unit: 'dollars'
         };
     }
 
@@ -72,5 +84,10 @@ export function calculateTransmissionCost(
             cloud: +(totalCloudCost / count).toFixed(6),
             averageTransmissionCost: +((totalEdgeCost + totalCloudCost) / count).toFixed(6),
         },
+        total: {
+            edge: +totalEdgeCost.toFixed(6),
+            cloud: +totalCloudCost.toFixed(6),
+        },
+        unit: 'dollars'
     };
 }
