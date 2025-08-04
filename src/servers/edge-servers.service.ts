@@ -4,6 +4,9 @@ import { ref_values } from '../util/util-data/reference-values';
 import { compareTransmissionTimes } from './util-functions/transmissionTime';
 import { cloudServer, edgeServer } from './dto/servers.data';
 import { calculateTransmissionCost } from './util-functions/transmissionCost';
+import { calculateQueuingTime } from './util-functions/transmissionWaitingTime';
+import { calculateExecutionMetrics } from './util-functions/transmission-execution';
+import { calculateEnergyUsageAndCost } from './util-functions/energy_metrics';
 
 @Injectable()
 export class EdgeServersService {
@@ -26,10 +29,16 @@ export class EdgeServersService {
 
     let transmission_time = compareTransmissionTimes(data, edgeServer, cloudServer)
     let transmission_cost = calculateTransmissionCost(data, edgeServer, cloudServer)
+    let transmission_queuing_time = calculateQueuingTime(data, edgeServer, cloudServer,);
+    let executions_metrics = calculateExecutionMetrics(data, edgeServer, cloudServer);
+    let energy_usage_and_cost = calculateEnergyUsageAndCost(data, edgeServer, cloudServer);
     return {
       health_parameter: result,
       transmission_time: transmission_time,
-      transmission_cost: transmission_cost
+      transmission_cost: transmission_cost,
+      transmission_queuing_time: transmission_queuing_time,
+      executions_metrics: executions_metrics,
+      energy_usage_and_cost: energy_usage_and_cost
     };
   }
 

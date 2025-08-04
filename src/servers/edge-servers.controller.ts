@@ -1,21 +1,14 @@
 import {
   Controller,
-  Get,
   Post,
   Body,
-  Patch,
-  Param,
-  Delete,
   UseInterceptors,
-  Query,
   UploadedFile,
 } from '@nestjs/common';
 import { EdgeServersService } from './edge-servers.service';
-import { CreateEdgeServerDto } from './dto/create-edge-server.dto';
 import * as XLSX from 'xlsx';
 import { ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { ref_values } from '../util/util-data/reference-values';
 import { testInputs } from './dto/test.input';
 import { transformData } from './dto/xlsdatatojson';
 
@@ -64,6 +57,7 @@ export class EdgeServersController {
 
     const xlsdata: any = XLSX.utils.sheet_to_json(sheet, { header: 1 }); // 2D array
     const data = transformData(xlsdata);
+    console.log(data, "data from excel file");
 
     try {
       return this.edgeServersService.runtest(data);

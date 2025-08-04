@@ -1,23 +1,23 @@
 export const edgeServer = {
   id: "edge-server-zur01",
   type: "Edge",
+  speed: 1.0, // MB/s
+  cost: 0.01, // USD
+  power: 50,           // Watts
+  costPerKWh: 0.10,     // USD
 
-  // Processing
-  processingPower: 15000,             // MIPS → α(Rₑ)
-  processingCostPerSecond: 0.00003,   // CPU cost per second → Cᵣₑ
 
-  // Transmission (IoT → Edge)
-  bandwidth: 100,                     // MB/s → β(Rₑ)
-  bandwidthCostPerSecond: 0.002,      // Data transfer cost → Cᵦₑ (Edge transmission cost)
+  processingPower: 15000,
+  processingCostPerSecond: 0.00003,
 
-  // Queuing (task waiting in queue)
-  queueCostPerSecond: 0.000005,       // Cost for task waiting → C_queueₑ
+  bandwidth: 100,
+  bandwidthCostPerSecond: 0.002,
 
-  // Energy
-  powerConsumption: 200,              // Watts (J/s) → pₑ(u(t))
-  energyCostPerUnit: 0.00000005,      // Cost per Joule → C_energyₑ
+  queueCostPerSecond: 0.000005,
 
-  // Derived Cost Labels
+  powerConsumption: 200,
+  energyCostPerUnit: 0.00000005,
+
   costLabels: {
     transmission: "Transmission Cost to Edge",
     execution: "Execution Cost at Edge",
@@ -29,23 +29,23 @@ export const edgeServer = {
 export const cloudServer = {
   id: "cloud-vm-central-eu-1",
   type: "Cloud",
+  speed: 2.0, // MB/s
+  cost: 0.03, // USD
+  power: 200,          // Watts
+  costPerKWh: 0.25,    // USD
 
-  // Processing
+
   processingPower: 120000,
   processingCostPerSecond: 0.00018,
 
-  // Transmission (Edge → Cloud)
   bandwidth: 1000,
-  bandwidthCostPerSecond: 0.008,       // Data transfer cost → Cᵦ_c (Cloud transmission cost)
+  bandwidthCostPerSecond: 0.008,
 
-  // Queuing
-  queueCostPerSecond: 0.000015,        // Cost for task waiting → C_queue_c
+  queueCostPerSecond: 0.000015,
 
-  // Energy
-  powerConsumption: 600,               // Watts → p_c(u(t))
-  energyCostPerUnit: 0.00000003,       // Cost per Joule → C_energy_c
+  powerConsumption: 600,
+  energyCostPerUnit: 0.00000003,
 
-  // Derived Cost Labels
   costLabels: {
     transmission: "Transmission Cost to Cloud",
     execution: "Execution Cost at Cloud",
