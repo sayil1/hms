@@ -15,7 +15,7 @@ type EnergyResult = {
 
 type EnergySummary = {
     results: EnergyResult[];
-    totals: {
+    total: {
         edge: {
             energy: number;
             cost: number;
@@ -92,7 +92,7 @@ export function calculateEnergyUsageAndCost(
     const count = inputs.length;
     return {
         results,
-        totals: {
+        total: {
             edge: {
                 energy: +totalEdgeEnergy.toFixed(6),
                 cost: +totalEdgeCost.toFixed(6),

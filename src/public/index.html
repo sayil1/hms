@@ -9,15 +9,6 @@
         integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous">
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
-        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
-        crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"
-        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
-        crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"
-        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
-        crossorigin="anonymous"></script>
 </head>
 
 <body>
@@ -26,8 +17,8 @@
             <div class="container">
                 <div class="row">
                     <div class="col-sm-6 col-md-4 col-lg-3 mb-3">
-                        <div class="card bg-light shadow-sm" type="button" class="btn btn-primary" data-toggle="modal"
-                            data-target=".bd-example-modal-lg" @click="displayTransmissionTime">
+                        <div class="card bg-light shadow-sm" type="button" @click="displayTransmissionTime"
+                            data-bs-toggle="modal" data-bs-target="#metricsModal">
                             <div class="card-body text-center">
                                 <p class="card-text display-6 text-primary">
                                     Transmission Time
@@ -37,8 +28,8 @@
                         </div>
                     </div>
                     <div class="col-sm-6 col-md-4 col-lg-3 mb-3">
-                        <div class="card bg-light shadow-sm" type="button" class="btn btn-primary" data-toggle="modal"
-                            data-target=".bd-example-modal-lg" @click="displayTransmissionCost">
+                        <div class="card bg-light shadow-sm" type="button" @click="displayTransmissionCost"
+                            data-bs-toggle="modal" data-bs-target="#metricsModal">
                             <div class="card-body text-center">
                                 <p class="card-text display-6 text-primary">
                                     Transmission Cost
@@ -47,81 +38,118 @@
                             </div>
                         </div>
                     </div>
-                    <!-- <div class="col-sm-6 col-md-4 col-lg-3 mb-3">
-                        <div class="card bg-light shadow-sm">
+                    <div class="col-sm-6 col-md-4 col-lg-3 mb-3">
+                        <div class="card bg-light shadow-sm" type="button" @click="displayExecutionsMetricsTime"
+                            data-bs-toggle="modal" data-bs-target="#metricsModal">
                             <div class="card-body text-center">
-                                <h5 class="card-title text-info"><i class="bi bi-list-ol me-2"></i> WT</h5>
-                                <p class="card-text display-6">1,258</p>
-                                <p class="card-text text-muted small">Queuing Time (Waiting Time)</p>
+                                <p class="card-text display-6 text-primary">
+                                    Execution <br> Time
+                                </p>
+                                <p class="card-text text-muted small">Click to view</p>
                             </div>
                         </div>
                     </div>
                     <div class="col-sm-6 col-md-4 col-lg-3 mb-3">
-                        <div class="card bg-light shadow-sm">
+                        <div class="card bg-light shadow-sm" type="button" @click="displayExecutionsMetricsCost"
+                            data-bs-toggle="modal" data-bs-target="#metricsModal">
                             <div class="card-body text-center">
-                                <h5 class="card-title text-warning"><i class="bi bi-bar-chart-line me-2"></i>
-                                    ECT
-                                </h5>
-                                <p class="card-text display-6">38</p>
-                                <p class="card-text text-muted small">Execution Time</p>
+                                <p class="card-text display-6 text-primary">
+                                    Execution <br> Cost
+                                </p>
+                                <p class="card-text text-muted small">Click to view</p>
                             </div>
                         </div>
-                    </div> -->
-                </div>
-            </div>
-        </div>
-
-        <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
-            aria-hidden="true">
-            <div class="modal-dialog modal-lg">
-                <div class="modal-content">
-
-                    <h4 class="card-title m-3">{{dialog_Heading}}</h4>
-
-                    <div class="row">
-                        <div class="col m-2">
-                            <h5 class="card-title m-2">Cloud</h5>
-
-                            <ul class="list-group">
-                                <li v-for="(item, index) in dialogData?.results" :key="index"
-                                    class="list-group-item d-flex justify-content-between align-items-center">
-                                    {{ JSON.stringify(item.id) }}
-                                    <span>{{item.cloud}}</span>
-                                </li>
-
-                            </ul>
-
-                            <h5 class="card-title m-3 col">Average {{dialogData?.averages?.cloud}}
-                                {{dialogData?.unit}}</h5>
-                            <h5 class="card-title m-3 col">Total {{dialogData?.total?.cloud}}
-                                {{dialogData?.unit}}</h5>
-
-
+                    </div>
+                    <div class="col-sm-6 col-md-4 col-lg-3 mb-3">
+                        <div class="card bg-light shadow-sm" type="button" @click="displayEnergyUsage"
+                            data-bs-toggle="modal" data-bs-target="#metricsModal">
+                            <div class="card-body text-center">
+                                <p class="card-text display-6 text-primary">
+                                    Energy <br> Usage
+                                </p>
+                                <p class="card-text text-muted small">Click to view</p>
+                            </div>
                         </div>
-                        <div class=" col m-2">
-                            <h5 class="card-title m-2">Edge </h5>
-
-                            <ul class="list-group">
-                                <li v-for="(item, index) in dialogData?.results" :key="index"
-                                    class="list-group-item d-flex justify-content-between align-items-center">
-                                    {{ JSON.stringify(item.id) }}
-                                    <span>{{item.edge}} </span>
-                                </li>
-
-                            </ul>
-
-                            <h5 class="card-title m-3 col">Average {{dialogData?.averages?.edge}} {{dialogData?.unit}}
-                            </h5>
-                            <h5 class="card-title m-3 col">Total {{dialogData?.total?.edge}} {{dialogData?.unit}}
-                            </h5>
+                    </div>
+                    <div class="col-sm-6 col-md-4 col-lg-3 mb-3">
+                        <div class="card bg-light shadow-sm" type="button" @click="displayEnergyCost"
+                            data-bs-toggle="modal" data-bs-target="#metricsModal">
+                            <div class="card-body text-center">
+                                <p class="card-text display-6 text-primary">
+                                    Energy <br> Cost
+                                </p>
+                                <p class="card-text text-muted small">Click to view</p>
+                            </div>
                         </div>
-
-
+                    </div>
+                    <div class="col-sm-6 col-md-4 col-lg-3 mb-3">
+                        <div class="card bg-light shadow-sm" type="button" @click="displayWaitingTime"
+                            data-bs-toggle="modal" data-bs-target="#metricsModal">
+                            <div class="card-body text-center">
+                                <p class="card-text display-6 text-primary">
+                                    Waiting <br> Time
+                                </p>
+                                <p class="card-text text-muted small">Click to view</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-md-4 col-lg-3 mb-3">
+                        <div class="card bg-light shadow-sm" type="button" @click="displayWaitingCost"
+                            data-bs-toggle="modal" data-bs-target="#metricsModal">
+                            <div class="card-body text-center">
+                                <p class="card-text display-6 text-primary">
+                                    Waiting <br> Cost
+                                </p>
+                                <p class="card-text text-muted small">Click to view</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
 
+        <div class="modal fade" id="metricsModal" tabindex="-1" aria-labelledby="metricsModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content" v-if="dialogData">
+                    <div class="modal-header">
+                        <h4 class="modal-title" id="metricsModalLabel">{{ dialog_Heading }}</h4>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col m-2">
+                                <h5 class="card-title m-2">Cloud</h5>
+                                <ul class="list-group">
+                                    <li v-for="(item, index) in dialogData.results" :key="index"
+                                        class="list-group-item d-flex justify-content-between align-items-center">
+                                        {{ item.id }}
+                                        <span>{{ item.cloud }}</span>
+                                    </li>
+                                </ul>
+                                <h5 class="card-title m-3 col">Average: {{ dialogData.averages.cloud }} {{
+                                    dialogData.unit }}</h5>
+                                <h5 class="card-title m-3 col">Total: {{ dialogData.total.cloud }} {{ dialogData.unit }}
+                                </h5>
+                            </div>
+                            <div class="col m-2">
+                                <h5 class="card-title m-2">Edge</h5>
+                                <ul class="list-group">
+                                    <li v-for="(item, index) in dialogData.results" :key="index"
+                                        class="list-group-item d-flex justify-content-between align-items-center">
+                                        {{ item.id }}
+                                        <span>{{ item.edge }}</span>
+                                    </li>
+                                </ul>
+                                <h5 class="card-title m-3 col">Average: {{ dialogData.averages.edge }} {{
+                                    dialogData.unit }}</h5>
+                                <h5 class="card-title m-3 col">Total: {{ dialogData.total.edge }} {{ dialogData.unit }}
+                                </h5>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <div class="row">
             <div class="col m-5">
@@ -131,10 +159,7 @@
                         <input class="form-control form-control-lg" id="formFileLg" type="file"
                             @change="handleFileUpload">
                     </div>
-
                 </div>
-
-
                 <hr>
                 <div>
                     <table class="table">
@@ -160,7 +185,6 @@
                                     <td>{{ result.unit || item.unit }}</td>
                                     <td>{{ result.label }}</td>
                                     <td>{{ result.value }}</td>
-
                                     <td>{{ result.difference }}</td>
                                     <td
                                         :class="{'text-warning fw-bold': result.result === 'hypo', 'text-success': result.result === 'normal', 'text-danger fw-bold': result.result === 'hyper',}">
@@ -173,7 +197,6 @@
                     </table>
                 </div>
             </div>
-
         </div>
 
         <script>
@@ -185,38 +208,12 @@
                     const loading = ref(false);
                     const error = ref(null);
                     const dialogData = ref(null);
-                    const transmission_time = ref(null)
-                    const transmission_cost = ref(null)
+                    const transmission_time = ref(null);
+                    const transmission_cost = ref(null);
+                    const executions_metrics = ref(null);
+                    const energy_metrics = ref(null);
+                    const waiting_metrics = ref(null); // New ref for waiting data
                     const dialog_Heading = ref(null);
-                    const unit = ref(null);
-                    const total = ref(0);
-
-
-                    const fetchData = async () => {
-                        loading.value = true;
-                        error.value = null;
-                        data.value = null;
-
-                        try {
-                            const response = await axios.post('/edge-servers/test');
-                            data.value = response.data;
-                        } catch (err) {
-                            error.value = err.message || 'Failed to fetch data';
-                        } finally {
-                            loading.value = false;
-                        }
-                    };
-
-                    const displayTransmissionTime = () => {
-                        dialogData.value = transmission_time.value;
-                        dialog_Heading.value = 'Transmission Time';
-
-                    };
-
-                    const displayTransmissionCost = () => {
-                        dialogData.value = transmission_cost.value;
-                        dialog_Heading.value = 'Transmission Cost';
-                    };
 
                     const handleFileUpload = async (event) => {
                         console.log('File upload event triggered');
@@ -233,26 +230,161 @@
                                 data.value = response.data.health_parameter;
                                 transmission_time.value = response.data.transmission_time;
                                 transmission_cost.value = response.data.transmission_cost;
-                                console.log('File uploaded successfully:', transmission_time, data, transmission_cost);
-
-
-
+                                executions_metrics.value = response.data.executions_metrics;
+                                energy_metrics.value = response.data.energy_metrics;
+                                waiting_metrics.value = response.data.transmission_queuing_time; // Store the new waiting metrics
+                                console.log('File uploaded successfully:', response.data);
                             } catch (error) {
                                 console.error('Error uploading file:', error);
                             }
                         }
                     };
 
+                    const displayTransmissionTime = () => {
+                        dialogData.value = transmission_time.value;
+                        dialog_Heading.value = 'Transmission Time';
+                    };
+
+                    const displayTransmissionCost = () => {
+                        dialogData.value = transmission_cost.value;
+                        dialog_Heading.value = 'Transmission Cost';
+                    };
+
+                    const displayExecutionsMetricsTime = () => {
+                        if (!executions_metrics.value) return;
+
+                        const execTimeData = JSON.parse(JSON.stringify(executions_metrics.value));
+
+                        execTimeData.results.forEach(result => {
+                            result.edge = result.edge.execTime;
+                            result.cloud = result.cloud.execTime;
+                        });
+
+                        execTimeData.averages.edge = executions_metrics.value.averages.edgeTime;
+                        execTimeData.averages.cloud = executions_metrics.value.averages.cloudTime;
+                        execTimeData.total.edge = executions_metrics.value.total.edgeExecTime;
+                        execTimeData.total.cloud = executions_metrics.value.total.cloudExecTime;
+                        execTimeData.unit = 'ms';
+
+                        dialogData.value = execTimeData;
+                        dialog_Heading.value = 'Execution Time';
+                    };
+
+                    const displayExecutionsMetricsCost = () => {
+                        if (!executions_metrics.value) return;
+
+                        const execCostData = JSON.parse(JSON.stringify(executions_metrics.value));
+
+                        execCostData.results.forEach(result => {
+                            result.edge = result.edge.cost;
+                            result.cloud = result.cloud.cost;
+                        });
+
+                        execCostData.averages.edge = executions_metrics.value.averages.edgeCost;
+                        execCostData.averages.cloud = executions_metrics.value.averages.cloudCost;
+                        execCostData.total.cloud = executions_metrics.value.total.cloudCost;
+                        execCostData.total.edge = executions_metrics.value.total.edgeCost;
+                        execCostData.unit = '$';
+
+                        dialogData.value = execCostData;
+                        dialog_Heading.value = 'Execution Cost';
+                    };
+
+                    const displayEnergyUsage = () => {
+                        if (!energy_metrics.value) return;
+
+                        const energyUsageData = JSON.parse(JSON.stringify(energy_metrics.value));
+
+                        energyUsageData.results.forEach(result => {
+                            result.edge = result.edge.energy;
+                            result.cloud = result.cloud.energy;
+                        });
+
+                        energyUsageData.averages.edge = energy_metrics.value.averages.edge.energy;
+                        energyUsageData.averages.cloud = energy_metrics.value.averages.cloud.energy;
+                        energyUsageData.total.edge = energy_metrics.value.totals.edge.energy;
+                        energyUsageData.total.cloud = energy_metrics.value.totals.cloud.energy;
+                        energyUsageData.unit = energy_metrics.value.unit.energy;
+
+                        dialogData.value = energyUsageData;
+                        dialog_Heading.value = 'Energy Usage';
+                    };
+
+                    const displayEnergyCost = () => {
+                        if (!energy_metrics.value) return;
+
+                        const energyCostData = JSON.parse(JSON.stringify(energy_metrics.value));
+
+                        energyCostData.results.forEach(result => {
+                            result.edge = result.edge.cost;
+                            result.cloud = result.cloud.cost;
+                        });
+
+                        energyCostData.averages.edge = energy_metrics.value.averages.edge.cost;
+                        energyCostData.averages.cloud = energy_metrics.value.averages.cloud.cost;
+                        energyCostData.total.edge = energy_metrics.value.totals.edge.cost;
+                        energyCostData.total.cloud = energy_metrics.value.totals.cloud.cost;
+                        energyCostData.unit = energy_metrics.value.unit.cost;
+
+                        dialogData.value = energyCostData;
+                        dialog_Heading.value = 'Energy Cost';
+                    };
+
+                    // New function for Waiting Time
+                    const displayWaitingTime = () => {
+                        if (!waiting_metrics.value) return;
+
+                        const waitingTimeData = JSON.parse(JSON.stringify(waiting_metrics.value));
+
+                        waitingTimeData.results.forEach(result => {
+                            result.edge = result.edge.wait;
+                            result.cloud = result.cloud.wait;
+                        });
+
+                        // waitingTimeData.averages.edge = waiting_metrics.value.averages.edge.time;
+                        // waitingTimeData.averages.cloud = waiting_metrics.value.averages.cloud.time;
+                        // waitingTimeData.total.edge = waiting_metrics.value.totals.edge.time;
+                        // waitingTimeData.total.cloud = waiting_metrics.value.totals.cloud.time;
+                        waitingTimeData.unit = waiting_metrics.value.unit.time;
+
+                        dialogData.value = waitingTimeData;
+                        dialog_Heading.value = 'Waiting Time';
+                    };
+
+                    // New function for Waiting Cost
+                    const displayWaitingCost = () => {
+                        if (!waiting_metrics.value) return;
+
+                        const waitingCostData = JSON.parse(JSON.stringify(waiting_metrics.value));
+
+                        waitingCostData.results.forEach(result => {
+                            result.edge = result.edge.cost;
+                            result.cloud = result.cloud.cost;
+                        });
+
+                        // waitingCostData.averages.edge = waiting_metrics.value.averages.edge.cost;
+                        // waitingCostData.averages.cloud = waiting_metrics.value.averages.cloud.cost;
+                        // waitingCostData.total.edge = waiting_metrics.value.totals.edge.cost;
+                        // waitingCostData.total.cloud = waiting_metrics.value.totals.cloud.cost;
+                        waitingCostData.unit = waiting_metrics.value.unit.cost;
+
+                        dialogData.value = waitingCostData;
+                        dialog_Heading.value = 'Waiting Cost';
+                    };
+
                     return {
                         data,
                         loading,
                         error,
-                        fetchData,
                         handleFileUpload,
-                        transmission_time,
-                        transmission_cost,
                         displayTransmissionTime,
                         displayTransmissionCost,
+                        displayExecutionsMetricsTime,
+                        displayExecutionsMetricsCost,
+                        displayEnergyUsage,
+                        displayEnergyCost,
+                        displayWaitingTime,
+                        displayWaitingCost,
                         dialogData,
                         dialog_Heading
                     };
@@ -263,12 +395,6 @@
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq"
-        crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
-        integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
-        crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.min.js"
-        integrity="sha384-VQqxDN0EQCkWoxt/0vsQvZswzTHUVOImccYmSyhJTp7kGtPed0Qcx8rK9h9YEgx+"
         crossorigin="anonymous"></script>
 </body>
 

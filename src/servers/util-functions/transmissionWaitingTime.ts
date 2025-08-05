@@ -139,7 +139,10 @@ type QueuingTimeSummary = {
         cloudCost: number;
         systemCost: number;
     };
-    unit: 'seconds';
+    unit: {
+        time: string;
+        cost: string;
+    }
 };
 
 export function calculateQueuingTime(
@@ -225,6 +228,9 @@ export function calculateQueuingTime(
             cloudCost: +totalCloudCost.toFixed(6),
             systemCost: +totalSystemCost.toFixed(6),
         },
-        unit: 'seconds',
+        unit: {
+            time: 'seconds',
+            cost: 'USD'
+        }
     };
 }
