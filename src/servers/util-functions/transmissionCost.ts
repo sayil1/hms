@@ -45,7 +45,7 @@ export function calculateTransmissionCost(
         totalEdgeCost += edgeCost;
         totalCloudCost += cloudCost;
 
-        console.log(`Task ${index + 1}: Edge Cost = ${edgeCost}, Cloud Cost = ${cloudCost}`);
+        // console.log(`Task ${index + 1}: Edge Cost = ${edgeCost}, Cloud Cost = ${cloudCost}`);
 
         return {
             id: `task-${index + 1}-${input.key}`,

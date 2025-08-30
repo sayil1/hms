@@ -119,6 +119,13 @@
                         <div class="row">
                             <div class="col m-2">
                                 <h5 class="card-title m-2">Cloud</h5>
+                                <div>
+                                    <h5 class="card-title m-3 col">Average: {{ dialogData.averages.cloud }} {{
+                                        dialogData.unit }}</h5>
+                                    <h5 class="card-title m-3 col">Total: {{ dialogData.total.cloud }} {{
+                                        dialogData.unit }}
+                                    </h5>
+                                </div>
                                 <ul class="list-group">
                                     <li v-for="(item, index) in dialogData.results" :key="index"
                                         class="list-group-item d-flex justify-content-between align-items-center">
@@ -126,13 +133,17 @@
                                         <span>{{ item.cloud }}</span>
                                     </li>
                                 </ul>
-                                <h5 class="card-title m-3 col">Average: {{ dialogData.averages.cloud }} {{
-                                    dialogData.unit }}</h5>
-                                <h5 class="card-title m-3 col">Total: {{ dialogData.total.cloud }} {{ dialogData.unit }}
-                                </h5>
+
                             </div>
                             <div class="col m-2">
                                 <h5 class="card-title m-2">Edge</h5>
+                                <div>
+                                    <h5 class="card-title m-3 col">Average: {{ dialogData.averages.edge }} {{
+                                        dialogData.unit }}</h5>
+                                    <h5 class="card-title m-3 col">Total: {{ dialogData.total.edge }} {{ dialogData.unit
+                                        }}
+                                    </h5>
+                                </div>
                                 <ul class="list-group">
                                     <li v-for="(item, index) in dialogData.results" :key="index"
                                         class="list-group-item d-flex justify-content-between align-items-center">
@@ -140,10 +151,7 @@
                                         <span>{{ item.edge }}</span>
                                     </li>
                                 </ul>
-                                <h5 class="card-title m-3 col">Average: {{ dialogData.averages.edge }} {{
-                                    dialogData.unit }}</h5>
-                                <h5 class="card-title m-3 col">Total: {{ dialogData.total.edge }} {{ dialogData.unit }}
-                                </h5>
+
                             </div>
                         </div>
                     </div>
