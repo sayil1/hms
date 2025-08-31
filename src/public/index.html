@@ -11,9 +11,35 @@
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 </head>
 
+<style>
+    .modal-fit-content {
+        width: fit-content !important;
+        max-width: 90% !important;
+    }
+</style>
+
 <body>
     <div id="app">
         <div class="col mt-5">
+            <div class="container">
+                <div class="row ">
+                    <div class="col">
+                        <h2>Edge Server</h2>
+                    </div>
+                    <div class="col-sm-6 col-md-4 col-lg-3 mb-3">
+                        <div class="card bg-light shadow-sm col" type="button" class="btn btn-primary" type="button"
+                            @click="displayWaitingCost" data-bs-toggle="modal" data-bs-target="#metricsModal2">
+                            <div class="card-body text-center">
+                                <p class="card-text display-6 text-primary">
+                                    Overall <br> Average
+                                </p>
+                                <p class="card-text text-muted small">Click to view</p>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
             <div class="container">
                 <div class="row">
                     <div class="col-sm-6 col-md-4 col-lg-3 mb-3">
@@ -159,6 +185,61 @@
             </div>
         </div>
 
+
+        <!-- Button trigger modal -->
+        <!-- <button type="button" class="btn btn-primary" type="button" @click="displayWaitingCost" data-bs-toggle="modal"
+            data-bs-target="#metricsModal2">
+            Launch demo modal
+        </button> -->
+
+        <!-- Modal -->
+        <div class="modal fade" id="metricsModal2" tabindex="-1" role="dialog" aria-labelledby="metricsModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog modal-fit-content" role="document">
+                <div class="modal-content" v-if="overall">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="metricsModalLabel">Overall Average</h5>
+
+                    </div>
+                    <div class="modal-body">
+                        <table class="table border-collapse border border-gray-400 w-full">
+                            <thead class="bg-gray-200">
+                                <tr>
+                                    <th>Task ID</th>
+                                    <th>Transmission Time</th>
+                                    <th>Transmission Cost</th>
+                                    <th>Execution Time</th>
+                                    <th>Execution Cost</th>
+                                    <th>Waiting Time</th>
+                                    <th>Waiting Cost</th>
+                                    <th>Energy Usage</th>
+                                    <th>Energy Cost</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr v-for="row in overall" :key="row.taskId">
+                                    <td>{{ row.taskId }}</td>
+                                    <td>{{ row.transmission_time }}</td>
+                                    <td>{{ row.transmission_cost }}</td>
+                                    <td>{{ row.execution_time }}</td>
+                                    <td>{{ row.execution_cost }}</td>
+                                    <td>{{ row.waiting_time }}</td>
+                                    <td>{{ row.waiting_cost }}</td>
+                                    <td>{{ row.energy_usage }}</td>
+                                    <td>{{ row.energy_cost }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary">Save changes</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
         <div class="row">
             <div class="col m-5">
                 <div class="row">
@@ -220,8 +301,9 @@
                     const transmission_cost = ref(null);
                     const executions_metrics = ref(null);
                     const energy_metrics = ref(null);
-                    const waiting_metrics = ref(null); // New ref for waiting data
+                    const waiting_metrics = ref(null);
                     const dialog_Heading = ref(null);
+                    const overall = ref(null);
 
                     const handleFileUpload = async (event) => {
                         console.log('File upload event triggered');
@@ -241,7 +323,8 @@
                                 executions_metrics.value = response.data.executions_metrics;
                                 energy_metrics.value = response.data.energy_metrics;
                                 waiting_metrics.value = response.data.transmission_queuing_time; // Store the new waiting metrics
-                                console.log('File uploaded successfully:', response.data);
+                                showOverall(response.data)
+                                // console.log('File uploaded successfully:', response.data);
                             } catch (error) {
                                 console.error('Error uploading file:', error);
                             }
@@ -380,6 +463,42 @@
                         dialog_Heading.value = 'Waiting Cost';
                     };
 
+
+                    showOverall = (data) => {
+                        const rows = [];
+
+                        data.health_parameter.forEach((param, index) => {
+                            const taskId = `task-${index + 1}-${param.key}`;
+
+
+                            // transmission_time
+                            const transTime = data.transmission_time.results.find(r => r.id === taskId);
+                            const transCost = data.transmission_cost.results.find(r => r.id === taskId);
+                            const queueTime = data.transmission_queuing_time.results.find(r => r.id === taskId);
+                            const exec = data.executions_metrics.results.find(r => r.id === taskId);
+                            const energy = data.energy_usage_and_cost.results.find(r => r.id === taskId);
+
+                            if (transTime && transCost && queueTime && exec && energy) {
+                                rows.push({
+                                    taskId: taskId,
+                                    transmission_time: `${transTime.edge} s (Edge) / ${transTime.cloud} s (Cloud)`,
+                                    transmission_cost: `${transCost.edge} USD (Edge) / ${transCost.cloud} USD (Cloud)`,
+                                    execution_time: `${exec.edge.execTime} s (Edge) / ${exec.cloud.execTime} s (Cloud)`,
+                                    execution_cost: `${exec.edge.cost} (Edge) / ${exec.cloud.cost} (Cloud)`,
+                                    waiting_time: `${queueTime.edge.wait} s (Edge) / ${queueTime.cloud.wait} s (Cloud)`,
+                                    waiting_cost: `${queueTime.edge.cost} USD (Edge) / ${queueTime.cloud.cost} USD (Cloud)`,
+                                    energy_usage: `${energy.edge.energyUsed} kWh (Edge) / ${energy.cloud.energyUsed} kWh (Cloud)`,
+                                    energy_cost: `${energy.edge.energyCost} USD (Edge) / ${energy.cloud.energyCost} USD (Cloud)`
+                                });
+                            }
+                        });
+
+                        console.log(rows);
+                        overall.value = rows
+                        // return rows;
+                    }
+
+
                     return {
                         data,
                         loading,
@@ -394,7 +513,9 @@
                         displayWaitingTime,
                         displayWaitingCost,
                         dialogData,
-                        dialog_Heading
+                        overall,
+                        dialog_Heading,
+                        showOverall
                     };
                 }
             }).mount('#app');
