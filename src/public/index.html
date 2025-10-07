@@ -135,64 +135,144 @@
         </div>
 
         <div class="modal fade" id="metricsModal" tabindex="-1" aria-labelledby="metricsModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-lg">
-                <div class="modal-content" v-if="dialogData">
-                    <div class="modal-header">
-                        <h4 class="modal-title" id="metricsModalLabel">{{ dialog_Heading }}</h4>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+                <div class="modal-content border-0 rounded-4 shadow-lg overflow-hidden" v-if="dialogData">
+
+                    <!-- Header -->
+                    <div class="modal-header text-white py-4 px-5 border-0"
+                        style="background: linear-gradient(135deg, #007bff, #00b4d8);">
+                        <h3 class="modal-title fw-bold mb-0 d-flex align-items-center" id="metricsModalLabel"
+                            style="font-size: 1.75rem;">
+                            <i class="bi bi-bar-chart-line-fill me-2 fs-3"></i> {{ dialog_Heading }}
+                        </h3>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                            aria-label="Close"></button>
                     </div>
-                    <div class="modal-body">
-                        <div class="row">
-                            <div class="col m-2">
-                                <h5 class="card-title m-2">Cloud</h5>
-                                <div>
-                                    <h5 class="card-title m-3 col">Average: {{ dialogData.averages.cloud }} {{
-                                        dialogData.unit }}</h5>
-                                    <h5 class="card-title m-3 col">Total: {{ dialogData.total.cloud }} {{
-                                        dialogData.unit }}
-                                    </h5>
-                                </div>
-                                <ul class="list-group">
-                                    <li v-for="(item, index) in dialogData.results" :key="index"
-                                        class="list-group-item d-flex justify-content-between align-items-center">
-                                        {{ item.id }}
-                                        <span>{{ item.cloud }}</span>
-                                    </li>
-                                </ul>
 
-                            </div>
-                            <div class="col m-2">
-                                <h5 class="card-title m-2">Edge</h5>
-                                <div>
-                                    <h5 class="card-title m-3 col">Average: {{ dialogData.averages.edge }} {{
-                                        dialogData.unit }}</h5>
-                                    <h5 class="card-title m-3 col">Total: {{ dialogData.total.edge }} {{ dialogData.unit
-                                        }}
-                                    </h5>
-                                </div>
-                                <ul class="list-group">
-                                    <li v-for="(item, index) in dialogData.results" :key="index"
-                                        class="list-group-item d-flex justify-content-between align-items-center">
-                                        {{ item.id }}
-                                        <span>{{ item.edge }}</span>
-                                    </li>
-                                </ul>
+                    <!-- Body -->
+                    <div class="modal-body p-5" style="background: #f8fafc;">
+                        <div class="row g-4 justify-content-center">
 
+                            <!-- Cloud Metrics -->
+                            <div class="col-md-4">
+                                <div class="card h-100 rounded-4 border-0 shadow-sm"
+                                    style="background: linear-gradient(180deg, #e3f2fd, #ffffff);">
+                                    <div class="card-header bg-transparent border-0 text-primary fw-semibold pb-0">
+                                        <h5 class="fw-bold" style="font-size: 1.3rem;">☁️ Cloud Metrics</h5>
+                                    </div>
+                                    <div class="card-body p-4">
+                                        <div class="mb-3 border-bottom pb-2">
+                                            <p class="text-muted small mb-1">Average</p>
+                                            <h3 class="fw-bold text-primary">{{ dialogData.averages.cloud }} {{
+                                                dialogData.unit }}</h3>
+                                        </div>
+                                        <div class="mb-3">
+                                            <p class="text-muted small mb-1">Total</p>
+                                            <h3 class="fw-bold text-primary">{{ dialogData.total.cloud }} {{
+                                                dialogData.unit }}</h3>
+                                        </div>
+
+                                        <p class="text-secondary small mt-3 border-top pt-3 fw-medium">Detailed Results
+                                        </p>
+                                        <ul class="list-group list-group-flush small"
+                                            style="max-height: 200px; overflow-y: auto;">
+                                            <li v-for="(item, index) in dialogData.results" :key="index"
+                                                class="list-group-item d-flex justify-content-between align-items-center p-2 border-0 bg-transparent">
+                                                <span class="fw-medium text-truncate">{{ item.id }}</span>
+                                                <span
+                                                    class="badge rounded-pill text-bg-primary-subtle text-primary px-3 py-2">{{
+                                                    item.cloud }}</span>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
                             </div>
+
+                            <!-- Edge Metrics -->
+                            <div class="col-md-4">
+                                <div class="card h-100 rounded-4 border-0 shadow-sm"
+                                    style="background: linear-gradient(180deg, #e8f5e9, #ffffff);">
+                                    <div class="card-header bg-transparent border-0 text-success fw-semibold pb-0">
+                                        <h5 class="fw-bold" style="font-size: 1.3rem;">⚙️ Edge Metrics</h5>
+                                    </div>
+                                    <div class="card-body p-4">
+                                        <div class="mb-3 border-bottom pb-2">
+                                            <p class="text-muted small mb-1">Average</p>
+                                            <h3 class="fw-bold text-success">{{ dialogData.averages.edge }} {{
+                                                dialogData.unit }}</h3>
+                                        </div>
+                                        <div class="mb-3">
+                                            <p class="text-muted small mb-1">Total</p>
+                                            <h3 class="fw-bold text-success">{{ dialogData.total.edge }} {{
+                                                dialogData.unit }}</h3>
+                                        </div>
+
+                                        <p class="text-secondary small mt-3 border-top pt-3 fw-medium">Detailed Results
+                                        </p>
+                                        <ul class="list-group list-group-flush small"
+                                            style="max-height: 200px; overflow-y: auto;">
+                                            <li v-for="(item, index) in dialogData.results" :key="index"
+                                                class="list-group-item d-flex justify-content-between align-items-center p-2 border-0 bg-transparent">
+                                                <span class="fw-medium text-truncate">{{ item.id }}</span>
+                                                <span
+                                                    class="badge rounded-pill text-bg-success-subtle text-success px-3 py-2">{{
+                                                    item.edge }}</span>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Vendor Metrics -->
+                            <div class="col-md-4" v-if="dialogData.total.vendor !== undefined">
+                                <div class="card h-100 rounded-4 border-0 shadow-sm"
+                                    style="background: linear-gradient(180deg, #fff8e1, #ffffff);">
+                                    <div class="card-header bg-transparent border-0 text-warning fw-semibold pb-0">
+                                        <h5 class="fw-bold" style="font-size: 1.3rem;">🏢 Vendor Metrics</h5>
+                                    </div>
+                                    <div class="card-body p-4">
+                                        <div class="mb-3 border-bottom pb-2">
+                                            <p class="text-muted small mb-1">Average</p>
+                                            <h3 class="fw-bold text-warning">{{ dialogData.averages.vendor }} {{
+                                                dialogData.unit }}</h3>
+                                        </div>
+                                        <div class="mb-3">
+                                            <p class="text-muted small mb-1">Total</p>
+                                            <h3 class="fw-bold text-warning">{{ dialogData.total.vendor }} {{
+                                                dialogData.unit }}</h3>
+                                        </div>
+
+                                        <p class="text-secondary small mt-3 border-top pt-3 fw-medium">Detailed Results
+                                        </p>
+                                        <ul class="list-group list-group-flush small"
+                                            style="max-height: 200px; overflow-y: auto;">
+                                            <li v-for="(item, index) in dialogData.results" :key="index"
+                                                class="list-group-item d-flex justify-content-between align-items-center p-2 border-0 bg-transparent">
+                                                <span class="fw-medium text-truncate">{{ item.id }}</span>
+                                                <span
+                                                    class="badge rounded-pill text-bg-warning-subtle text-warning px-3 py-2">{{
+                                                    item.vendor }}</span>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+
                         </div>
                     </div>
+
+                    <!-- Footer -->
+                    <div class="modal-footer justify-content-center py-3 border-0" style="background: #f1f5f9;">
+                        <button type="button" class="btn btn-light text-secondary border rounded-pill px-4 py-2"
+                            data-bs-dismiss="modal">
+                            <i class="bi bi-x-circle me-1"></i> Close
+                        </button>
+                    </div>
+
                 </div>
             </div>
         </div>
 
-
-        <!-- Button trigger modal -->
-        <!-- <button type="button" class="btn btn-primary" type="button" @click="displayWaitingCost" data-bs-toggle="modal"
-            data-bs-target="#metricsModal2">
-            Launch demo modal
-        </button> -->
-
-        <!-- Modal -->
         <div class="modal fade" id="metricsModal2" tabindex="-1" role="dialog" aria-labelledby="metricsModalLabel"
             aria-hidden="true">
             <div class="modal-dialog modal-fit-content" role="document">
@@ -201,36 +281,41 @@
                         <h5 class="modal-title" id="metricsModalLabel">Overall Average</h5>
 
                     </div>
-                    <div class="modal-body">
-                        <table class="table border-collapse border border-gray-400 w-full">
-                            <thead class="bg-gray-200">
-                                <tr>
-                                    <th>Task ID</th>
-                                    <th>Transmission Time</th>
-                                    <th>Transmission Cost</th>
-                                    <th>Execution Time</th>
-                                    <th>Execution Cost</th>
-                                    <th>Waiting Time</th>
-                                    <th>Waiting Cost</th>
-                                    <th>Energy Usage</th>
-                                    <th>Energy Cost</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr v-for="row in overall" :key="row.taskId">
-                                    <td>{{ row.taskId }}</td>
-                                    <td>{{ row.transmission_time }}</td>
-                                    <td>{{ row.transmission_cost }}</td>
-                                    <td>{{ row.execution_time }}</td>
-                                    <td>{{ row.execution_cost }}</td>
-                                    <td>{{ row.waiting_time }}</td>
-                                    <td>{{ row.waiting_cost }}</td>
-                                    <td>{{ row.energy_usage }}</td>
-                                    <td>{{ row.energy_cost }}</td>
-                                </tr>
-                            </tbody>
-                        </table>
+
+                    <div class="modal-body p-4" style="background: #f8fafc;">
+                        <div class="table-responsive shadow-sm rounded-4 overflow-hidden border border-gray-200">
+                            <table class="table align-middle mb-0"
+                                style="border-collapse: separate; border-spacing: 0;">
+                                <thead style="background: linear-gradient(135deg, #007bff, #00b4d8); color: white;">
+                                    <tr>
+                                        <th class="fw-semibold py-3 px-3">Task ID</th>
+                                        <th class="fw-semibold py-3 px-3">Transmission Time</th>
+                                        <th class="fw-semibold py-3 px-3">Transmission Cost</th>
+                                        <th class="fw-semibold py-3 px-3">Execution Time</th>
+                                        <th class="fw-semibold py-3 px-3">Execution Cost</th>
+                                        <th class="fw-semibold py-3 px-3">Waiting Time</th>
+                                        <th class="fw-semibold py-3 px-3">Waiting Cost</th>
+                                        <th class="fw-semibold py-3 px-3">Energy Usage</th>
+                                        <th class="fw-semibold py-3 px-3">Energy Cost</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="bg-white">
+                                    <tr v-for="row in overall" :key="row.taskId" class="hover-row">
+                                        <td class="fw-medium py-3 px-3 text-primary-emphasis">{{ row.taskId }}</td>
+                                        <td class="py-3 px-3 text-muted">{{ row.transmission_time }}</td>
+                                        <td class="py-3 px-3 text-info fw-semibold">{{ row.transmission_cost }}</td>
+                                        <td class="py-3 px-3 text-muted">{{ row.execution_time }}</td>
+                                        <td class="py-3 px-3 text-success fw-semibold">{{ row.execution_cost }}</td>
+                                        <td class="py-3 px-3 text-muted">{{ row.waiting_time }}</td>
+                                        <td class="py-3 px-3 text-warning fw-semibold">{{ row.waiting_cost }}</td>
+                                        <td class="py-3 px-3 text-muted">{{ row.energy_usage }}</td>
+                                        <td class="py-3 px-3 text-danger fw-semibold">{{ row.energy_cost }}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
+
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                         <button type="button" class="btn btn-primary">Save changes</button>
@@ -324,7 +409,7 @@
                                 energy_metrics.value = response.data.energy_metrics;
                                 waiting_metrics.value = response.data.transmission_queuing_time; // Store the new waiting metrics
                                 showOverall(response.data)
-                                // console.log('File uploaded successfully:', response.data);
+                                console.log('File uploaded successfully:', response.data);
                             } catch (error) {
                                 console.error('Error uploading file:', error);
                             }
