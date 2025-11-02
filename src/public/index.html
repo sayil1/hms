@@ -11,17 +11,12 @@
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 </head>
 
-<style>
-    .modal-fit-content {
-        width: fit-content !important;
-        max-width: 90% !important;
-    }
-</style>
+
 
 <body>
     <div id="app">
-        <div class="col mt-5">
-            <div class="container">
+        <div class="col mt-5 m-5">
+            <!-- <div class="container">
                 <div class="row ">
                     <div class="col">
                         <h2>Edge Server</h2>
@@ -39,99 +34,176 @@
                     </div>
 
                 </div>
-            </div>
-            <div class="container">
-                <div class="row">
-                    <div class="col-sm-6 col-md-4 col-lg-3 mb-3">
-                        <div class="card bg-light shadow-sm" type="button" @click="displayTransmissionTime"
-                            data-bs-toggle="modal" data-bs-target="#metricsModal">
-                            <div class="card-body text-center">
-                                <p class="card-text display-6 text-primary">
-                                    Transmission Time
-                                </p>
-                                <p class="card-text text-muted small">Click to view</p>
+            </div> -->
+            <div class="row">
+                <div class="col">
+                    <div class="ml-3">
+                        <div class="card shadow p-4">
+                            <h2 class="fw-bold">Task Offloading Algorithm Comparison</h2>
+                            <hr class="mb-3">
+                            <p class="text-muted mb-4">Aggregate results based on minimizing the sum of Cost and Time
+                                for each task.</p>
+
+                            <div class="table-responsive">
+                                <table class="table table-borderless align-middle" style="font-size: 1.1rem;">
+                                    <thead>
+                                        <tr>
+                                            <th class="p-3">Metric</th>
+
+                                            <th class="bg-primary text-white p-3">
+                                                Cloud <br> Algorithm
+                                            </th>
+
+
+                                            <th class="bg-primary text-white p-3">
+                                                Edge <br> Algorithm
+                                            </th>
+
+                                            <th class="bg-danger text-white p-3">
+                                                Vendor <br>
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td class="fw-bold py-3">Total Final Cost <br> (USD)</td>
+                                            <td class="py-3 text-success fw-bold">${{ totalFinalTransmissionCostCloud }}
+                                            </td>
+                                            <td class="py-3 text-danger fw-bold">$ {{ totalFinalTransmissionCostEdge }}
+                                            </td>
+                                            <td class="py-3 text-danger fw-bold">$ {{ vendorTotalVendorCost }}</td>
+
+                                        </tr>
+
+                                        <tr>
+                                            <td class="fw-bold py-3">Total Final Time <br> (Seconds)</td>
+                                            <td class="py-3 text-info fw-bold">{{ totalFinalTransmissionTimeCloud }} s
+                                            </td>
+                                            <td class="py-3 text-info fw-bold">{{ totalFinalTransmissionTimeEdge }} s
+                                            </td>
+                                            <td class="py-3 text-info fw-bold">{{ vendorTotalVendorTime }} s</td>
+                                        </tr>
+
+                                        <tr>
+                                            <td class="fw-bold py-3">Average Time <br> per Task (Seconds)</td>
+                                            <td class="py-3 text-info fw-bold">{{ averageFinalTransmissionTimeCloud }} s
+                                            </td>
+                                            <td class="py-3 text-info fw-bold">{{ averageFinalTransmissionTimeEdge }} s
+                                            </td>
+                                            <td class="py-3 text-info fw-bold">{{ averageTotalVendorTime }} s</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
                             </div>
+
+                            <small class="text-muted mt-3">
+                                *All results are the sum of optimal executions (Cloud OR Edge) for each task.
+                            </small>
                         </div>
                     </div>
-                    <div class="col-sm-6 col-md-4 col-lg-3 mb-3">
-                        <div class="card bg-light shadow-sm" type="button" @click="displayTransmissionCost"
-                            data-bs-toggle="modal" data-bs-target="#metricsModal">
-                            <div class="card-body text-center">
-                                <p class="card-text display-6 text-primary">
-                                    Transmission Cost
-                                </p>
-                                <p class="card-text text-muted small">Click to view</p>
+                </div>
+                <div class="container col">
+
+                    <div class="row">
+                        <div class="col-sm-6 col-md-4 mb-3">
+                            <div class="card bg-light shadow-sm" type="button" @click="displayTransmissionTime"
+                                data-bs-toggle="modal" data-bs-target="#metricsModal">
+                                <div class="card-body text-center p-3">
+                                    <p class="card-text h5 text-primary">
+                                        Transmission <br> Time
+                                    </p>
+                                    <p class="card-text text-muted small">Click to view</p>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="col-sm-6 col-md-4 col-lg-3 mb-3">
-                        <div class="card bg-light shadow-sm" type="button" @click="displayExecutionsMetricsTime"
-                            data-bs-toggle="modal" data-bs-target="#metricsModal">
-                            <div class="card-body text-center">
-                                <p class="card-text display-6 text-primary">
-                                    Execution <br> Time
-                                </p>
-                                <p class="card-text text-muted small">Click to view</p>
+
+                        <div class="col-sm-6 col-md-4 mb-3">
+                            <div class="card bg-light shadow-sm" type="button" @click="displayTransmissionCost"
+                                data-bs-toggle="modal" data-bs-target="#metricsModal">
+                                <div class="card-body text-center p-3">
+                                    <p class="card-text h5 text-primary">
+                                        Transmission <br> Cost
+                                    </p>
+                                    <p class="card-text text-muted small">Click to view</p>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="col-sm-6 col-md-4 col-lg-3 mb-3">
-                        <div class="card bg-light shadow-sm" type="button" @click="displayExecutionsMetricsCost"
-                            data-bs-toggle="modal" data-bs-target="#metricsModal">
-                            <div class="card-body text-center">
-                                <p class="card-text display-6 text-primary">
-                                    Execution <br> Cost
-                                </p>
-                                <p class="card-text text-muted small">Click to view</p>
+
+                        <div class="col-sm-6 col-md-4 mb-3">
+                            <div class="card bg-light shadow-sm" type="button" @click="displayExecutionsMetricsTime"
+                                data-bs-toggle="modal" data-bs-target="#metricsModal">
+                                <div class="card-body text-center p-3">
+                                    <p class="card-text h5 text-primary">
+                                        Execution <br> Time
+                                    </p>
+                                    <p class="card-text text-muted small">Click to view</p>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="col-sm-6 col-md-4 col-lg-3 mb-3">
-                        <div class="card bg-light shadow-sm" type="button" @click="displayEnergyUsage"
-                            data-bs-toggle="modal" data-bs-target="#metricsModal">
-                            <div class="card-body text-center">
-                                <p class="card-text display-6 text-primary">
-                                    Energy <br> Usage
-                                </p>
-                                <p class="card-text text-muted small">Click to view</p>
+
+                        <div class="col-sm-6 col-md-4 mb-3">
+                            <div class="card bg-light shadow-sm" type="button" @click="displayExecutionsMetricsCost"
+                                data-bs-toggle="modal" data-bs-target="#metricsModal">
+                                <div class="card-body text-center p-3">
+                                    <p class="card-text h5 text-primary">
+                                        Execution <br> Cost
+                                    </p>
+                                    <p class="card-text text-muted small">Click to view</p>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="col-sm-6 col-md-4 col-lg-3 mb-3">
-                        <div class="card bg-light shadow-sm" type="button" @click="displayEnergyCost"
-                            data-bs-toggle="modal" data-bs-target="#metricsModal">
-                            <div class="card-body text-center">
-                                <p class="card-text display-6 text-primary">
-                                    Energy <br> Cost
-                                </p>
-                                <p class="card-text text-muted small">Click to view</p>
+
+                        <div class="col-sm-6 col-md-4 mb-3">
+                            <div class="card bg-light shadow-sm" type="button" @click="displayEnergyUsage"
+                                data-bs-toggle="modal" data-bs-target="#metricsModal">
+                                <div class="card-body text-center p-3">
+                                    <p class="card-text h5 text-primary">
+                                        Energy <br> Usage
+                                    </p>
+                                    <p class="card-text text-muted small">Click to view</p>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="col-sm-6 col-md-4 col-lg-3 mb-3">
-                        <div class="card bg-light shadow-sm" type="button" @click="displayWaitingTime"
-                            data-bs-toggle="modal" data-bs-target="#metricsModal">
-                            <div class="card-body text-center">
-                                <p class="card-text display-6 text-primary">
-                                    Waiting <br> Time
-                                </p>
-                                <p class="card-text text-muted small">Click to view</p>
+
+                        <div class="col-sm-6 col-md-4 mb-3">
+                            <div class="card bg-light shadow-sm" type="button" @click="displayEnergyCost"
+                                data-bs-toggle="modal" data-bs-target="#metricsModal">
+                                <div class="card-body text-center p-3">
+                                    <p class="card-text h5 text-primary">
+                                        Energy <br> Cost
+                                    </p>
+                                    <p class="card-text text-muted small">Click to view</p>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="col-sm-6 col-md-4 col-lg-3 mb-3">
-                        <div class="card bg-light shadow-sm" type="button" @click="displayWaitingCost"
-                            data-bs-toggle="modal" data-bs-target="#metricsModal">
-                            <div class="card-body text-center">
-                                <p class="card-text display-6 text-primary">
-                                    Waiting <br> Cost
-                                </p>
-                                <p class="card-text text-muted small">Click to view</p>
+
+                        <div class="col-sm-6 col-md-4 mb-3">
+                            <div class="card bg-light shadow-sm" type="button" @click="displayWaitingTime"
+                                data-bs-toggle="modal" data-bs-target="#metricsModal">
+                                <div class="card-body text-center p-3">
+                                    <p class="card-text h5 text-primary">
+                                        Waiting <br> Time
+                                    </p>
+                                    <p class="card-text text-muted small">Click to view</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-6 col-md-4 mb-3">
+                            <div class="card bg-light shadow-sm" type="button" @click="displayWaitingCost"
+                                data-bs-toggle="modal" data-bs-target="#metricsModal">
+                                <div class="card-body text-center p-3">
+                                    <p class="card-text h5 text-primary">
+                                        Waiting <br> Cost
+                                    </p>
+                                    <p class="card-text text-muted small">Click to view</p>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+
         </div>
 
         <div class="modal fade" id="metricsModal" tabindex="-1" aria-labelledby="metricsModalLabel" aria-hidden="true">
@@ -389,6 +461,16 @@
                     const waiting_metrics = ref(null);
                     const dialog_Heading = ref(null);
                     const overall = ref(null);
+                    const totalFinalTransmissionCostCloud = ref(null);
+                    const totalFinalTransmissionCostEdge = ref(null);
+                    const vendorTotalVendorCost = ref(null);
+                    const totalFinalTransmissionTimeCloud = ref(null);
+                    const totalFinalTransmissionTimeEdge = ref(null);
+                    const vendorTotalVendorTime = ref(null);
+
+                    const averageFinalTransmissionTimeCloud = ref(null);
+                    const averageFinalTransmissionTimeEdge = ref(null);
+                    const averageTotalVendorTime = ref(null);
 
                     const handleFileUpload = async (event) => {
                         console.log('File upload event triggered');
@@ -407,7 +489,20 @@
                                 transmission_cost.value = response.data.transmission_cost;
                                 executions_metrics.value = response.data.executions_metrics;
                                 energy_metrics.value = response.data.energy_metrics;
-                                waiting_metrics.value = response.data.transmission_queuing_time; // Store the new waiting metrics
+                                waiting_metrics.value = response.data.transmission_queuing_time;
+
+                                totalFinalTransmissionCostCloud.value = response.data.transmission_cost.total.cloud;
+                                totalFinalTransmissionCostEdge.value = response.data.transmission_cost.total.edge;
+                                vendorTotalVendorCost.value = response.data.transmission_cost.total.vendor;
+
+                                totalFinalTransmissionTimeCloud.value = response.data.transmission_time.total.cloud;
+                                totalFinalTransmissionTimeEdge.value = response.data.transmission_time.total.edge;
+                                vendorTotalVendorTime.value = response.data.transmission_time.total.vendor;
+
+                                averageFinalTransmissionTimeCloud.value = response.data.transmission_time.averages.cloud;
+                                averageFinalTransmissionTimeEdge.value = response.data.transmission_time.averages.edge;
+                                averageTotalVendorTime.value = response.data.transmission_time.averages.vendor;
+
                                 showOverall(response.data)
                                 console.log('File uploaded successfully:', response.data);
                             } catch (error) {
@@ -578,7 +673,7 @@
                             }
                         });
 
-                        console.log(rows);
+                        console.log(rows, "overall rows");
                         overall.value = rows
                         // return rows;
                     }
@@ -600,7 +695,17 @@
                         dialogData,
                         overall,
                         dialog_Heading,
-                        showOverall
+                        showOverall,
+                        totalFinalTransmissionCostCloud,
+                        totalFinalTransmissionCostEdge,
+                        vendorTotalVendorCost,
+                        totalFinalTransmissionTimeCloud,
+                        totalFinalTransmissionTimeEdge,
+                        vendorTotalVendorTime,
+
+                        averageFinalTransmissionTimeCloud,
+                        averageFinalTransmissionTimeEdge,
+                        averageTotalVendorTime
                     };
                 }
             }).mount('#app');
