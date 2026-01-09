@@ -11,6 +11,18 @@
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 </head>
 
+<style>
+    table {
+        border-collapse: collapse;
+        width: 100%;
+    }
+
+    table,
+    th,
+    td {
+        border: 1px solid #000;
+    }
+</style>
 
 
 <body>
@@ -211,10 +223,10 @@
                 <div class="modal-content border-0 rounded-4 shadow-lg overflow-hidden" v-if="dialogData">
 
                     <!-- Header -->
-                    <div class="modal-header text-white py-4 px-5 border-0"
+                    <div class="modal-header text-white py-2 px-3 border-0"
                         style="background: linear-gradient(135deg, #007bff, #00b4d8);">
                         <h3 class="modal-title fw-bold mb-0 d-flex align-items-center" id="metricsModalLabel"
-                            style="font-size: 1.75rem;">
+                            style="font-size: 1.05rem;">
                             <i class="bi bi-bar-chart-line-fill me-2 fs-3"></i> {{ dialog_Heading }}
                         </h3>
                         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
@@ -233,28 +245,31 @@
                                         <h5 class="fw-bold" style="font-size: 1.3rem;">☁️ Cloud Metrics</h5>
                                     </div>
                                     <div class="card-body p-4">
-                                        <div class="mb-3 border-bottom pb-2">
+                                        <!-- <div class="mb-3 border-bottom pb-2">
                                             <p class="text-muted small mb-1">Average</p>
-                                            <h3 class="fw-bold text-primary">{{ dialogData.averages.cloud }} {{
+                                            <h3 class="small text-primary">{{ dialogData.averages.cloud }} {{
                                                 dialogData.unit }}</h3>
                                         </div>
                                         <div class="mb-3">
                                             <p class="text-muted small mb-1">Total</p>
-                                            <h3 class="fw-bold text-primary">{{ dialogData.total.cloud }} {{
+                                            <h3 class="small text-primary">{{ dialogData.total.cloud }} {{
                                                 dialogData.unit }}</h3>
-                                        </div>
+                                        </div> -->
 
                                         <p class="text-secondary small mt-3 border-top pt-3 fw-medium">Detailed Results
                                         </p>
                                         <ul class="list-group list-group-flush small"
                                             style="max-height: 200px; overflow-y: auto;">
-                                            <li v-for="(item, index) in dialogData.results" :key="index"
-                                                class="list-group-item d-flex justify-content-between align-items-center p-2 border-0 bg-transparent">
-                                                <span class="fw-medium text-truncate">{{ item.id }}</span>
-                                                <span
-                                                    class="badge rounded-pill text-bg-primary-subtle text-primary px-3 py-2">{{
-                                                    item.cloud }}</span>
-                                            </li>
+                                            <template v-for="(item, index) in dialogData.results" :key="index">
+                                                <li v-if="item.cloud" class="list-group-item d-flex justify-content-between
+                                                    align-items-center p-2 border-0 bg-transparent">
+                                                    <span class="fw-medium text-truncate">{{ item.id }}</span>
+                                                    <span
+                                                        class="badge rounded-pill text-bg-primary-subtle text-primary px-3 py-2">{{
+                                                        item.cloud }}</span>
+                                                </li>
+                                            </template>
+
                                         </ul>
                                     </div>
                                 </div>
@@ -268,35 +283,123 @@
                                         <h5 class="fw-bold" style="font-size: 1.3rem;">⚙️ Edge Metrics</h5>
                                     </div>
                                     <div class="card-body p-4">
-                                        <div class="mb-3 border-bottom pb-2">
+                                        <!-- <div class="mb-3 border-bottom pb-2">
                                             <p class="text-muted small mb-1">Average</p>
-                                            <h3 class="fw-bold text-success">{{ dialogData.averages.edge }} {{
+                                            <h3 class=" text-success small">{{ dialogData.averages.edge }} {{
                                                 dialogData.unit }}</h3>
                                         </div>
                                         <div class="mb-3">
                                             <p class="text-muted small mb-1">Total</p>
-                                            <h3 class="fw-bold text-success">{{ dialogData.total.edge }} {{
+                                            <h3 class=" text-success small">{{ dialogData.total.edge }} {{
                                                 dialogData.unit }}</h3>
-                                        </div>
+                                        </div> -->
 
                                         <p class="text-secondary small mt-3 border-top pt-3 fw-medium">Detailed Results
                                         </p>
                                         <ul class="list-group list-group-flush small"
                                             style="max-height: 200px; overflow-y: auto;">
-                                            <li v-for="(item, index) in dialogData.results" :key="index"
-                                                class="list-group-item d-flex justify-content-between align-items-center p-2 border-0 bg-transparent">
-                                                <span class="fw-medium text-truncate">{{ item.id }}</span>
-                                                <span
-                                                    class="badge rounded-pill text-bg-success-subtle text-success px-3 py-2">{{
-                                                    item.edge }}</span>
-                                            </li>
+
+
+                                            <template v-for="(item, index) in dialogData.results" :key="index">
+                                                <li v-if="item.edge" class="list-group-item d-flex justify-content-between
+                                                    align-items-center p-2 border-0 bg-transparent">
+                                                    <span class="fw-medium text-truncate">{{ item.id }}</span>
+                                                    <span
+                                                        class="badge rounded-pill text-bg-primary-subtle text-primary px-3 py-2">{{
+                                                        item.edge }}</span>
+                                                </li>
+                                            </template>
                                         </ul>
                                     </div>
                                 </div>
                             </div>
 
+                            <div class="col-md-4">
+                                <table border="1" cellpadding="8" cellspacing="0"
+                                    style="border-collapse: collapse; width: 100%; text-align: center;">
+                                    <thead>
+                                        <tr>
+                                            <th rowspan="2">Metric</th>
+                                            <th colspan="2">My Framework (Optimized)</th>
+                                            <th colspan="2">DPTARA</th>
+                                            <th colspan="2">3rd Framework</th>
+                                            <th colspan="2">4th Framework</th>
+                                        </tr>
+                                        <tr>
+                                            <th>Cloud</th>
+                                            <th>Edge</th>
+                                            <th>Cloud</th>
+                                            <th>Edge</th>
+                                            <th>Cloud</th>
+                                            <th>Edge</th>
+                                            <th>Cloud</th>
+                                            <th>Edge</th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+                                        <tr>
+                                            <td><strong>Total</strong></td>
+                                            <td>{{ dialogData.total.cloud }} {{
+                                                dialogData.unit }}</td>
+                                            <td>{{ dialogData.total.edge }} {{ dialogData.unit }}</td>
+                                            <td>-</td>
+                                            <td>-</td>
+                                            <td>-</td>
+                                            <td>-</td>
+                                            <td>-</td>
+                                            <td>-</td>
+                                        </tr>
+
+                                        <tr>
+                                            <td><strong>Average</strong></td>
+                                            <td>{{ dialogData.averages.cloud }} {{
+                                                dialogData.unit }}</td>
+                                            <td>{{ dialogData.averages.edge }} {{ dialogData.unit }}</td>
+                                            <td>-</td>
+                                            <td>-</td>
+                                            <td>-</td>
+                                            <td>-</td>
+                                            <td>-</td>
+                                            <td>-</td>
+                                        </tr>
+
+                                        <tr>
+                                            <td><strong>Overall Total</strong></td>
+                                            <td colspan="2">
+                                                Cloud Total ({{ dialogData.total.cloud }}) + Edge Total ({{
+                                                dialogData.total.edge }}) = <strong>{{ dialogData.total.cloud +
+                                                    dialogData.total.edge }}</strong>
+                                            </td>
+                                            <td colspan="2">
+                                            </td>
+                                            <td colspan="2">
+                                            </td>
+                                            <td colspan="2">
+                                            </td>
+                                        </tr>
+
+                                        <tr>
+                                            <td><strong>Overall Average</strong></td>
+                                            <td colspan="2">
+                                                Cloud Average {{ dialogData.averages.cloud }} + Edge Average {{
+                                                dialogData.averages.edge }} ÷ 2 =
+                                                <strong>{{ (dialogData.averages.cloud + dialogData.averages.edge) / 2
+                                                    }}</strong>
+                                            </td>
+                                            <td colspan="2">
+                                            </td>
+                                            <td colspan="2">
+                                            </td>
+                                            <td colspan="2">
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
                             <!-- Vendor Metrics -->
-                            <div class="col-md-4" v-if="dialogData.total.vendor !== undefined">
+                            <!-- <div class="col-md-4" v-if="dialogData.total.vendor !== undefined">
                                 <div class="card h-100 rounded-4 border-0 shadow-sm"
                                     style="background: linear-gradient(180deg, #fff8e1, #ffffff);">
                                     <div class="card-header bg-transparent border-0 text-warning fw-semibold pb-0">
@@ -328,7 +431,7 @@
                                         </ul>
                                     </div>
                                 </div>
-                            </div>
+                            </div> -->
 
                         </div>
                     </div>
@@ -473,7 +576,6 @@
                     const averageTotalVendorTime = ref(null);
 
                     const handleFileUpload = async (event) => {
-                        console.log('File upload event triggered');
                         const file = event.target.files[0];
                         if (file) {
                             const formData = new FormData();
@@ -484,6 +586,7 @@
                                         'Content-Type': 'multipart/form-data'
                                     }
                                 });
+                                console.log(response.data, "response data from server");
                                 data.value = response.data.health_parameter;
                                 transmission_time.value = response.data.transmission_time;
                                 transmission_cost.value = response.data.transmission_cost;
@@ -504,7 +607,6 @@
                                 averageTotalVendorTime.value = response.data.transmission_time.averages.vendor;
 
                                 showOverall(response.data)
-                                console.log('File uploaded successfully:', response.data);
                             } catch (error) {
                                 console.error('Error uploading file:', error);
                             }
@@ -673,7 +775,6 @@
                             }
                         });
 
-                        console.log(rows, "overall rows");
                         overall.value = rows
                         // return rows;
                     }

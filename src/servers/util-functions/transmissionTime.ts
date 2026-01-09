@@ -5,9 +5,9 @@ import { estimateDataSizeFromBinary } from "./dataSize";
 type TaskResult = {
     id: string;
     dataSizeMB: number;
-    edge: number;
-    cloud: number;
-    betterServer: "Edge" | "Cloud";
+    edge?: number;
+    cloud?: number;
+    betterServer: any;
 };
 
 
@@ -23,25 +23,37 @@ export function compareTransmissionTimes(
     let totalOptimalTime = 0;
     let vendorTime = 0;
 
+
     const results: TaskResult[] = inputs.map((input, index) => {
         const dataSizeMB = estimateDataSizeFromBinary(input);
-        const edgeData = dataSizeMB / edge.bandwidth;
-        const cloudData = (dataSizeMB / edge.bandwidth) + (dataSizeMB / cloud.bandwidth);
+        const edgeTime = dataSizeMB / edge.bandwidth;
+        const cloudTime = (dataSizeMB / edge.bandwidth) + (dataSizeMB / cloud.bandwidth);
 
-        totalEdgeTime += edgeData;
-        totalCloudTime += cloudData;
-        totalOptimalTime += Math.min(edgeData, cloudData);
-        vendorTime += (Math.random() * (0.00005 - 0.00001)) + cloudData;
+        const noise = (Math.floor(Math.random() * 201) - 100) * 0.00001;
+        const isEdgeBetter = edgeTime < (cloudTime + noise);
 
+        totalEdgeTime += edgeTime;
+        totalOptimalTime += Math.min(edgeTime, cloudTime);
+        vendorTime += (Math.random() * 0.00004 + 0.00001) + cloudTime;
 
-        return {
+        const baseInfo = {
             id: `task-${index + 1}-${input.key}`,
             dataSizeMB,
-            edge: parseFloat(edgeData.toFixed(6)),
-            cloud: parseFloat(cloudData.toFixed(6)),
-            betterServer: edgeData < cloudData ? "Edge" : "Cloud",
-
+            betterServer: isEdgeBetter ? "Edge" : "Cloud"
         };
+
+        if (isEdgeBetter) {
+            return {
+                ...baseInfo,
+                edge: parseFloat(edgeTime.toFixed(6))
+            };
+        } else {
+            totalCloudTime += cloudTime;
+            return {
+                ...baseInfo,
+                cloud: parseFloat(cloudTime.toFixed(6))
+            };
+        }
     });
     const count = results.length;
 

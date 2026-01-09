@@ -5,9 +5,9 @@ import { estimateDataSizeFromBinary } from "./dataSize";
 type TransmissionCostResult = {
     id: string;
     dataSizeMB: number;
-    edge: number;
-    cloud: number;
-    betterServer: 'Edge' | 'Cloud';
+    edge?: number;
+    cloud?: number;
+    betterServer: any;
     vendor: number; // Added vendor to type
     vendorPrecentageDifference: string; // Added vendorPrecentageDifference to type
 };
@@ -19,45 +19,48 @@ export function calculateTransmissionCost(
     edge: { bandwidth: number; bandwidthCostPerSecond: number },
     cloud: { bandwidth: number; bandwidthCostPerSecond: number }
 ): any {
-    let totalEdgeCost = 0;   // <--- Initialize to 0
-    let totalCloudCost = 0;  // <--- Initialize to 0
-    let totalVendorCost = 0; // <--- Initialize to 0
+    let totalEdgeCost = 0;
+    let totalCloudCost = 0;
+    let totalVendorCost = 0;
 
     const results: TransmissionCostResult[] = inputs.map((input, index) => {
         const dataSizeMB = estimateDataSizeFromBinary(input);
 
         const edgeCost = (dataSizeMB / edge.bandwidth) * edge.bandwidthCostPerSecond;
+        const cloudHopCost = (dataSizeMB / cloud.bandwidth) * cloud.bandwidthCostPerSecond;
+        const totalCloudCostCalc = edgeCost + cloudHopCost;
+        const noise = (Math.floor(Math.random() * 201) - 100) * 0.00001;
 
-        const cloudCost =
-            (dataSizeMB / edge.bandwidth) * edge.bandwidthCostPerSecond + // Cost to edge
-            (dataSizeMB / cloud.bandwidth) * cloud.bandwidthCostPerSecond; // Cost from edge to cloud
+        const isEdgeBetter = edgeCost < (totalCloudCostCalc + noise);
 
-        let vendorCost = (Math.random() * (0.00005 - 0.00001) + 0.00001) + cloudCost;
-        // NOTE: The percentage calculation is now a positive markup
-        let vendorPrecentageDifference = ((vendorCost - cloudCost) / cloudCost) * 100;
+        const vendorCost = (Math.random() * (0.00005 - 0.00001) + 0.00001) + totalCloudCostCalc;
+        const vendorPrecentageDifference = ((vendorCost - totalCloudCostCalc) / totalCloudCostCalc) * 100;
 
-        // **FIX: ACCUMULATE TOTAL COSTS HERE**
-        totalEdgeCost += edgeCost;
-        totalCloudCost += cloudCost;
-        totalVendorCost += vendorCost;
-
-        // console.log(`Task ${index + 1}: Edge Cost = ${edgeCost}, Cloud Cost = ${cloudCost}`);
-
-        return {
+        const baseResult = {
             id: `task-${index + 1}-${input.key}`,
             dataSizeMB,
-            edge: +edgeCost.toFixed(6),
-            cloud: +cloudCost.toFixed(6),
-            betterServer: edgeCost < cloudCost ? 'Edge' : 'Cloud',
+            betterServer: isEdgeBetter ? 'Edge' : 'Cloud',
             vendor: +vendorCost.toFixed(6),
             vendorPrecentageDifference: vendorPrecentageDifference.toFixed(6)
-
         };
+
+        if (isEdgeBetter) {
+            totalEdgeCost += edgeCost;
+            return {
+                ...baseResult,
+                edge: +edgeCost.toFixed(6)
+            };
+        } else {
+            totalCloudCost += totalCloudCostCalc;
+            return {
+                ...baseResult,
+                cloud: +totalCloudCostCalc.toFixed(6)
+            };
+        }
     });
 
     const count = results.length;
 
-    // ... (rest of the function for handling empty input and return remains the same)
 
     if (count === 0) {
         return {

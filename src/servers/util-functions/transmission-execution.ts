@@ -38,40 +38,64 @@ export function calculateExecutionMetrics(
     edge: { speed: number; cost: number },
     cloud: { speed: number; cost: number }
 ): ExecutionSummary {
-    const results: ExecutionResult[] = [];
+    const results: any[] = [];
 
     let totalEdgeTime = 0;
     let totalCloudTime = 0;
     let totalEdgeCost = 0;
     let totalCloudCost = 0;
+    const noise = (Math.floor(Math.random() * 201) - 100) * 0.00001;
+
 
     for (let i = 0; i < inputs.length; i++) {
         const task = inputs[i];
         const { key } = task;
-        const dataSizeMB = estimateDataSizeFromBinary(task); // S_i
+        const dataSizeMB = estimateDataSizeFromBinary(task);
 
-        const edgeExecTime = dataSizeMB / edge.speed; // ECT(T_i, R_ke) = S_i / α(R_ke)
-        const cloudExecTime = dataSizeMB / cloud.speed; // ECT(T_i, R_kc) = S_i / α(R_kc)
+        // 1. Calculate potential execution times and costs
+        const edgeExecTime = dataSizeMB / edge.speed;
+        const cloudExecTime = dataSizeMB / cloud.speed;
 
-        const edgeCost = edgeExecTime * edge.cost; // EC = ECT * CR_e
-        const cloudCost = cloudExecTime * cloud.cost; // EC = ECT * CR_c
+        const edgeCost = edgeExecTime * edge.cost;
+        const cloudCost = cloudExecTime * cloud.cost;
 
-        totalEdgeTime += edgeExecTime;
-        totalCloudTime += cloudExecTime;
-        totalEdgeCost += edgeCost;
-        totalCloudCost += cloudCost;
+        // 2. Determine the winner (based on lowest cost)
+        // You could also use (edgeExecTime < cloudExecTime) if speed is the priority
+        const isEdgeBetter = edgeCost < (cloudCost + noise);
 
-        results.push({
+
+        // 3. Create the result object based on the winner
+        const resultEntry = {
             id: `task-${i + 1}-${key}`,
-            edge: {
-                execTime: +edgeExecTime.toFixed(6),
-                cost: +edgeCost.toFixed(6),
-            },
-            cloud: {
-                execTime: +cloudExecTime.toFixed(6),
-                cost: +cloudCost.toFixed(6),
-            },
-        });
+            dataSizeMB, // Optional: helpful for debugging
+            betterServer: isEdgeBetter ? 'Edge' : 'Cloud'
+        };
+
+        if (isEdgeBetter) {
+            // Winner: Edge
+            totalEdgeTime += edgeExecTime;
+            totalEdgeCost += edgeCost;
+
+            results.push({
+                ...resultEntry,
+                edge: {
+                    execTime: +edgeExecTime.toFixed(6),
+                    cost: +edgeCost.toFixed(6),
+                }
+            });
+        } else {
+            // Winner: Cloud
+            totalCloudTime += cloudExecTime;
+            totalCloudCost += cloudCost;
+
+            results.push({
+                ...resultEntry,
+                cloud: {
+                    execTime: +cloudExecTime.toFixed(6),
+                    cost: +cloudCost.toFixed(6),
+                }
+            });
+        }
     }
 
     const count = results.length;

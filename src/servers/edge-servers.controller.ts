@@ -57,7 +57,6 @@ export class EdgeServersController {
 
     const xlsdata: any = XLSX.utils.sheet_to_json(sheet, { header: 1 }); // 2D array
     const data = transformData(xlsdata);
-    console.log(data, "data from excel file");
 
     try {
       return this.edgeServersService.runtest(data);
