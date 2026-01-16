@@ -326,23 +326,30 @@
                                             <th colspan="2">4th Framework</th>
                                         </tr>
                                         <tr>
-                                            <th>Cloud</th>
-                                            <th>Edge</th>
-                                            <th>Cloud</th>
-                                            <th>Edge</th>
-                                            <th>Cloud</th>
-                                            <th>Edge</th>
-                                            <th>Cloud</th>
-                                            <th>Edge</th>
+                                            <th>Cloud ({{
+                                                dialogData.unit }})</th>
+                                            <th>Edge ({{
+                                                dialogData.unit }})</th>
+                                            <th>Cloud ({{
+                                                dialogData.unit }})</th>
+                                            <th>Edge ({{
+                                                dialogData.unit }})</th>
+                                            <th>Cloud ({{
+                                                dialogData.unit }})</th>
+                                            <th>Edge ({{
+                                                dialogData.unit }})</th>
+                                            <th>Cloud ({{
+                                                dialogData.unit }})</th>
+                                            <th>Edge ({{
+                                                dialogData.unit }})</th>
                                         </tr>
                                     </thead>
 
                                     <tbody>
                                         <tr>
-                                            <td><strong>Total</strong></td>
-                                            <td>{{ dialogData.total.cloud }} {{
-                                                dialogData.unit }}</td>
-                                            <td>{{ dialogData.total.edge }} {{ dialogData.unit }}</td>
+                                            <td><strong>Total </strong></td>
+                                            <td>{{ dialogData.total.cloud }} </td>
+                                            <td>{{ dialogData.total.edge }} </td>
                                             <td>-</td>
                                             <td>-</td>
                                             <td>-</td>
@@ -353,9 +360,8 @@
 
                                         <tr>
                                             <td><strong>Average</strong></td>
-                                            <td>{{ dialogData.averages.cloud }} {{
-                                                dialogData.unit }}</td>
-                                            <td>{{ dialogData.averages.edge }} {{ dialogData.unit }}</td>
+                                            <td>{{ dialogData.averages.cloud }} </td>
+                                            <td>{{ dialogData.averages.edge }} </td>
                                             <td>-</td>
                                             <td>-</td>
                                             <td>-</td>
@@ -367,8 +373,8 @@
                                         <tr>
                                             <td><strong>Overall Total</strong></td>
                                             <td colspan="2">
-                                                Cloud Total ({{ dialogData.total.cloud }}) + Edge Total ({{
-                                                dialogData.total.edge }}) = <strong>{{ dialogData.total.cloud +
+
+                                                <strong>{{ dialogData.total.cloud +
                                                     dialogData.total.edge }}</strong>
                                             </td>
                                             <td colspan="2">
@@ -382,8 +388,7 @@
                                         <tr>
                                             <td><strong>Overall Average</strong></td>
                                             <td colspan="2">
-                                                Cloud Average {{ dialogData.averages.cloud }} + Edge Average {{
-                                                dialogData.averages.edge }} ÷ 2 =
+
                                                 <strong>{{ (dialogData.averages.cloud + dialogData.averages.edge) / 2
                                                     }}</strong>
                                             </td>
