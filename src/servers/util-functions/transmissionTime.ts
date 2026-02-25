@@ -10,71 +10,102 @@ type TaskResult = {
     betterServer: any;
 };
 
-
-
-
 export function compareTransmissionTimes(
     inputs: CheckHealthParameterInput[],
-    edge: any,
-    cloud: any
-): any {
+    edge: { bandwidth: number },
+    cloud: { bandwidth: number }
+) {
     let totalEdgeTime = 0;
     let totalCloudTime = 0;
     let totalOptimalTime = 0;
-    let vendorTime = 0;
+    let totalVendorTime = 0;
 
+    const edgeResults: any[] = [];
+    const cloudResults: any[] = [];
+    const results: TaskResult[] = [];
 
-    const results: TaskResult[] = inputs.map((input, index) => {
+    for (let index = 0; index < inputs.length; index++) {
+        const input = inputs[index];
+
+        const taskId = `task-${index + 1}-${input.key}`;
         const dataSizeMB = estimateDataSizeFromBinary(input);
-        const edgeTime = dataSizeMB / edge.bandwidth;
-        const cloudTime = (dataSizeMB / edge.bandwidth) + (dataSizeMB / cloud.bandwidth);
 
-        const noise = (Math.floor(Math.random() * 201) - 100) * 0.00001;
-        const isEdgeBetter = edgeTime < (cloudTime + noise);
+        // Base times
+        const baseEdgeTime = dataSizeMB / edge.bandwidth;
+        const baseCloudTime =
+            (dataSizeMB / edge.bandwidth) +
+            (dataSizeMB / cloud.bandwidth);
+
+        // Percentage-based jitter (±15%)
+        const fluctuationRange = 0.15;
+
+        const edgeFluctuation =
+            (Math.random() * 2 - 1) * fluctuationRange;
+
+        const cloudFluctuation =
+            (Math.random() * 2 - 1) * fluctuationRange;
+
+        const edgeTime = Math.max(
+            0,
+            baseEdgeTime * (1 + edgeFluctuation)
+        );
+
+        const cloudTime = Math.max(
+            0,
+            baseCloudTime * (1 + cloudFluctuation)
+        );
 
         totalEdgeTime += edgeTime;
+        totalCloudTime += cloudTime;
         totalOptimalTime += Math.min(edgeTime, cloudTime);
-        vendorTime += (Math.random() * 0.00004 + 0.00001) + cloudTime;
 
-        const baseInfo = {
-            id: `task-${index + 1}-${input.key}`,
-            dataSizeMB,
-            betterServer: isEdgeBetter ? "Edge" : "Cloud"
-        };
+        const vendorOverhead =
+            baseCloudTime * (Math.random() * 0.05);
 
-        if (isEdgeBetter) {
-            return {
-                ...baseInfo,
-                edge: parseFloat(edgeTime.toFixed(6))
-            };
-        } else {
-            totalCloudTime += cloudTime;
-            return {
-                ...baseInfo,
-                cloud: parseFloat(cloudTime.toFixed(6))
-            };
-        }
-    });
-    const count = results.length;
+        const vendorTime = cloudTime + vendorOverhead;
+        totalVendorTime += vendorTime;
 
+        edgeResults.push({
+            id: taskId,
+            dataSizeMB: +dataSizeMB.toFixed(6),
+            transmissionTime: +edgeTime.toFixed(6),
+            server: "Edge",
+        });
+
+        cloudResults.push({
+            id: taskId,
+            dataSizeMB: +dataSizeMB.toFixed(6),
+            transmissionTime: +cloudTime.toFixed(6),
+            server: "Cloud",
+        });
+
+        results.push({
+            id: taskId,
+            dataSizeMB: +dataSizeMB.toFixed(6),
+            betterServer:
+                edgeTime < cloudTime ? "Edge" : "Cloud",
+            edge: +edgeTime.toFixed(6),
+            cloud: +cloudTime.toFixed(6),
+        });
+    }
+
+    const count = inputs.length || 1;
 
     return {
-
         results,
+        edge: edgeResults,
+        cloud: cloudResults,
         averages: {
             edge: +(totalEdgeTime / count).toFixed(6),
             cloud: +(totalCloudTime / count).toFixed(6),
-            averageTransmissionCost: +((totalEdgeTime + totalCloudTime) / count).toFixed(6),
-            vendor: +((vendorTime) / count).toFixed(6),
+            vendor: +(totalVendorTime / count).toFixed(6),
         },
         total: {
             edge: +totalEdgeTime.toFixed(6),
             cloud: +totalCloudTime.toFixed(6),
             optimalTime: +totalOptimalTime.toFixed(6),
-            vendor: +vendorTime.toFixed(6),
+            vendor: +totalVendorTime.toFixed(6),
         },
-        unit: 'seconds'
+        unit: "seconds",
     };
 }
-
-

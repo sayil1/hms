@@ -9,6 +9,9 @@
         integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous">
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+
 </head>
 
 <style>
@@ -245,23 +248,12 @@
                                         <h5 class="fw-bold" style="font-size: 1.3rem;">☁️ Cloud Metrics</h5>
                                     </div>
                                     <div class="card-body p-4">
-                                        <!-- <div class="mb-3 border-bottom pb-2">
-                                            <p class="text-muted small mb-1">Average</p>
-                                            <h3 class="small text-primary">{{ dialogData.averages.cloud }} {{
-                                                dialogData.unit }}</h3>
-                                        </div>
-                                        <div class="mb-3">
-                                            <p class="text-muted small mb-1">Total</p>
-                                            <h3 class="small text-primary">{{ dialogData.total.cloud }} {{
-                                                dialogData.unit }}</h3>
-                                        </div> -->
-
                                         <p class="text-secondary small mt-3 border-top pt-3 fw-medium">Detailed Results
                                         </p>
                                         <ul class="list-group list-group-flush small"
                                             style="max-height: 200px; overflow-y: auto;">
                                             <template v-for="(item, index) in dialogData.results" :key="index">
-                                                <li v-if="item.cloud" class="list-group-item d-flex justify-content-between
+                                                <li v-if="item.betterServer === 'Cloud'" class="list-group-item d-flex justify-content-between
                                                     align-items-center p-2 border-0 bg-transparent">
                                                     <span class="fw-medium text-truncate">{{ item.id }}</span>
                                                     <span
@@ -280,28 +272,15 @@
                                 <div class="card h-100 rounded-4 border-0 shadow-sm"
                                     style="background: linear-gradient(180deg, #e8f5e9, #ffffff);">
                                     <div class="card-header bg-transparent border-0 text-success fw-semibold pb-0">
-                                        <h5 class="fw-bold" style="font-size: 1.3rem;">⚙️ Edge Metrics</h5>
+                                        <h5 class="fw-bold" style="font-size: 1.3rem;">⚙️ Edge Metricsss</h5>
                                     </div>
                                     <div class="card-body p-4">
-                                        <!-- <div class="mb-3 border-bottom pb-2">
-                                            <p class="text-muted small mb-1">Average</p>
-                                            <h3 class=" text-success small">{{ dialogData.averages.edge }} {{
-                                                dialogData.unit }}</h3>
-                                        </div>
-                                        <div class="mb-3">
-                                            <p class="text-muted small mb-1">Total</p>
-                                            <h3 class=" text-success small">{{ dialogData.total.edge }} {{
-                                                dialogData.unit }}</h3>
-                                        </div> -->
-
                                         <p class="text-secondary small mt-3 border-top pt-3 fw-medium">Detailed Results
                                         </p>
                                         <ul class="list-group list-group-flush small"
                                             style="max-height: 200px; overflow-y: auto;">
-
-
                                             <template v-for="(item, index) in dialogData.results" :key="index">
-                                                <li v-if="item.edge" class="list-group-item d-flex justify-content-between
+                                                <li v-if="item.betterServer === 'Edge'" class="list-group-item d-flex justify-content-between
                                                     align-items-center p-2 border-0 bg-transparent">
                                                     <span class="fw-medium text-truncate">{{ item.id }}</span>
                                                     <span
@@ -402,41 +381,9 @@
                                     </tbody>
                                 </table>
                             </div>
-
-                            <!-- Vendor Metrics -->
-                            <!-- <div class="col-md-4" v-if="dialogData.total.vendor !== undefined">
-                                <div class="card h-100 rounded-4 border-0 shadow-sm"
-                                    style="background: linear-gradient(180deg, #fff8e1, #ffffff);">
-                                    <div class="card-header bg-transparent border-0 text-warning fw-semibold pb-0">
-                                        <h5 class="fw-bold" style="font-size: 1.3rem;">🏢 Vendor Metrics</h5>
-                                    </div>
-                                    <div class="card-body p-4">
-                                        <div class="mb-3 border-bottom pb-2">
-                                            <p class="text-muted small mb-1">Average</p>
-                                            <h3 class="fw-bold text-warning">{{ dialogData.averages.vendor }} {{
-                                                dialogData.unit }}</h3>
-                                        </div>
-                                        <div class="mb-3">
-                                            <p class="text-muted small mb-1">Total</p>
-                                            <h3 class="fw-bold text-warning">{{ dialogData.total.vendor }} {{
-                                                dialogData.unit }}</h3>
-                                        </div>
-
-                                        <p class="text-secondary small mt-3 border-top pt-3 fw-medium">Detailed Results
-                                        </p>
-                                        <ul class="list-group list-group-flush small"
-                                            style="max-height: 200px; overflow-y: auto;">
-                                            <li v-for="(item, index) in dialogData.results" :key="index"
-                                                class="list-group-item d-flex justify-content-between align-items-center p-2 border-0 bg-transparent">
-                                                <span class="fw-medium text-truncate">{{ item.id }}</span>
-                                                <span
-                                                    class="badge rounded-pill text-bg-warning-subtle text-warning px-3 py-2">{{
-                                                    item.vendor }}</span>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div> -->
+                            <div style="height: 400px;">
+                                <canvas ref="chartCanvas"></canvas>
+                            </div>
 
                         </div>
                     </div>
@@ -554,7 +501,7 @@
         </div>
 
         <script>
-            const { createApp, ref } = Vue;
+            const { createApp, ref, onMounted } = Vue;
 
             createApp({
                 setup() {
@@ -565,7 +512,12 @@
                     const transmission_time = ref(null);
                     const transmission_cost = ref(null);
                     const executions_metrics = ref(null);
-                    const energy_metrics = ref(null);
+                    const energy_usage = ref(null);
+                    const energy_cost = ref(null);
+
+                    const execution_cost = ref(null);
+                    const execution_time = ref(null);
+
                     const waiting_metrics = ref(null);
                     const dialog_Heading = ref(null);
                     const overall = ref(null);
@@ -575,10 +527,10 @@
                     const totalFinalTransmissionTimeCloud = ref(null);
                     const totalFinalTransmissionTimeEdge = ref(null);
                     const vendorTotalVendorTime = ref(null);
-
                     const averageFinalTransmissionTimeCloud = ref(null);
                     const averageFinalTransmissionTimeEdge = ref(null);
                     const averageTotalVendorTime = ref(null);
+                    const chartCanvas = ref(null);
 
                     const handleFileUpload = async (event) => {
                         const file = event.target.files[0];
@@ -595,8 +547,12 @@
                                 data.value = response.data.health_parameter;
                                 transmission_time.value = response.data.transmission_time;
                                 transmission_cost.value = response.data.transmission_cost;
-                                executions_metrics.value = response.data.executions_metrics;
-                                energy_metrics.value = response.data.energy_metrics;
+                                energy_cost.value = response.data.energy_cost;
+                                energy_usage.value = response.data.energy_usage;
+
+                                execution_cost.value = response.data.execution_cost;
+                                execution_time.value = response.data.execution_time;
+
                                 waiting_metrics.value = response.data.transmission_queuing_time;
 
                                 totalFinalTransmissionCostCloud.value = response.data.transmission_cost.total.cloud;
@@ -621,91 +577,134 @@
                     const displayTransmissionTime = () => {
                         dialogData.value = transmission_time.value;
                         dialog_Heading.value = 'Transmission Time';
+
+                        if (!transmission_time.value || !transmission_time.value.edge) {
+                            console.error("Transmission time data not available");
+                            return;
+                        }
+
+                        dialogData.value = transmission_time.value;
+                        dialog_Heading.value = 'Transmission Time';
+
+                        const edgeSubset = transmission_time.value.edge.slice(0, 10);
+                        const cloudSubset = transmission_time.value.cloud.slice(0, 10);
+                        const labels = edgeSubset.map(item => item.id);
+                        const edgeData = edgeSubset.map(item => item.transmissionTime);
+                        const cloudData = cloudSubset.map(item => item.transmissionTime);
+
+                        console.log(edgeData, cloudData, labels, "data for transmission time chart");
+
+                        setTimeout(() => {
+                            renderChart(edgeData, cloudData, labels);
+                        }, 200);
                     };
 
                     const displayTransmissionCost = () => {
                         dialogData.value = transmission_cost.value;
                         dialog_Heading.value = 'Transmission Cost';
+
+                        if (!transmission_cost.value || !transmission_cost.value.edge) {
+                            console.error("Transmission cost data not available");
+                            return;
+                        }
+
+                        dialogData.value = transmission_cost.value;
+                        dialog_Heading.value = 'Transmission Cost';
+
+                        const edgeSubset = transmission_cost.value.edge.slice(0, 10);
+                        const cloudSubset = transmission_cost.value.cloud.slice(0, 10);
+                        const labels = edgeSubset.map(item => item.id);
+                        const edgeData = edgeSubset.map(item => item.transmissionCost);
+                        const cloudData = cloudSubset.map(item => item.transmissionCost);
+
+                        console.log(edgeData, cloudData, labels, "data for transmission cost chart");
+
+                        setTimeout(() => {
+                            renderChart(edgeData, cloudData, labels);
+                        }, 200);
                     };
 
                     const displayExecutionsMetricsTime = () => {
-                        if (!executions_metrics.value) return;
+                        if (!execution_time.value || !execution_time.value.edge) {
+                            console.error("Execution time data not available");
+                            return;
+                        }
 
-                        const execTimeData = JSON.parse(JSON.stringify(executions_metrics.value));
-
-                        execTimeData.results.forEach(result => {
-                            result.edge = result.edge.execTime;
-                            result.cloud = result.cloud.execTime;
-                        });
-
-                        execTimeData.averages.edge = executions_metrics.value.averages.edgeTime;
-                        execTimeData.averages.cloud = executions_metrics.value.averages.cloudTime;
-                        execTimeData.total.edge = executions_metrics.value.total.edgeExecTime;
-                        execTimeData.total.cloud = executions_metrics.value.total.cloudExecTime;
-                        execTimeData.unit = 'ms';
-
-                        dialogData.value = execTimeData;
+                        dialogData.value = execution_time.value;
                         dialog_Heading.value = 'Execution Time';
+
+                        const edgeSubset = execution_time.value.edge.slice(0, 10);
+                        const cloudSubset = execution_time.value.cloud.slice(0, 10);
+                        const labels = edgeSubset.map(item => item.id);
+                        const edgeData = edgeSubset.map(item => item.executionTime);
+                        const cloudData = cloudSubset.map(item => item.executionTime);
+
+                        setTimeout(() => {
+                            renderChart(edgeData, cloudData, labels);
+                        }, 200);
                     };
 
                     const displayExecutionsMetricsCost = () => {
-                        if (!executions_metrics.value) return;
 
-                        const execCostData = JSON.parse(JSON.stringify(executions_metrics.value));
+                        if (!execution_cost.value || !execution_cost.value.edge) {
+                            console.error("Execution cost data not available");
+                            return;
+                        }
 
-                        execCostData.results.forEach(result => {
-                            result.edge = result.edge.cost;
-                            result.cloud = result.cloud.cost;
-                        });
-
-                        execCostData.averages.edge = executions_metrics.value.averages.edgeCost;
-                        execCostData.averages.cloud = executions_metrics.value.averages.cloudCost;
-                        execCostData.total.cloud = executions_metrics.value.total.cloudCost;
-                        execCostData.total.edge = executions_metrics.value.total.edgeCost;
-                        execCostData.unit = '$';
-
-                        dialogData.value = execCostData;
+                        dialogData.value = execution_cost.value;
                         dialog_Heading.value = 'Execution Cost';
+
+                        const edgeSubset = execution_cost.value.edge.slice(0, 10);
+                        const cloudSubset = execution_cost.value.cloud.slice(0, 10);
+                        const labels = edgeSubset.map(item => item.id);
+                        const edgeData = edgeSubset.map(item => item.executionCost);
+                        const cloudData = cloudSubset.map(item => item.executionCost);
+
+                        setTimeout(() => {
+                            renderChart(edgeData, cloudData, labels);
+                        }, 200);
+
                     };
 
                     const displayEnergyUsage = () => {
-                        if (!energy_metrics.value) return;
+                        if (!energy_usage.value || !energy_usage.value.edge) {
+                            console.error("Energy data not available");
+                            return;
+                        }
 
-                        const energyUsageData = JSON.parse(JSON.stringify(energy_metrics.value));
-
-                        energyUsageData.results.forEach(result => {
-                            result.edge = result.edge.energy;
-                            result.cloud = result.cloud.energy;
-                        });
-
-                        energyUsageData.averages.edge = energy_metrics.value.averages.edge.energy;
-                        energyUsageData.averages.cloud = energy_metrics.value.averages.cloud.energy;
-                        energyUsageData.total.edge = energy_metrics.value.totals.edge.energy;
-                        energyUsageData.total.cloud = energy_metrics.value.totals.cloud.energy;
-                        energyUsageData.unit = energy_metrics.value.unit.energy;
-
-                        dialogData.value = energyUsageData;
+                        dialogData.value = energy_usage.value;
                         dialog_Heading.value = 'Energy Usage';
+
+                        const edgeSubset = energy_usage.value.edge.slice(0, 10);
+                        const cloudSubset = energy_usage.value.cloud.slice(0, 10);
+
+                        const labels = edgeSubset.map(item => item.id);
+                        const edgeData = edgeSubset.map(item => item.energyUsage);
+                        const cloudData = cloudSubset.map(item => item.energyUsage);
+
+                        setTimeout(() => {
+                            renderChart(edgeData, cloudData, labels);
+                        }, 200);
                     };
 
                     const displayEnergyCost = () => {
-                        if (!energy_metrics.value) return;
+                        if (!energy_cost.value || !energy_cost.value.edge) {
+                            console.error("Energy cost data not available");
+                            return;
+                        }
 
-                        const energyCostData = JSON.parse(JSON.stringify(energy_metrics.value));
-
-                        energyCostData.results.forEach(result => {
-                            result.edge = result.edge.cost;
-                            result.cloud = result.cloud.cost;
-                        });
-
-                        energyCostData.averages.edge = energy_metrics.value.averages.edge.cost;
-                        energyCostData.averages.cloud = energy_metrics.value.averages.cloud.cost;
-                        energyCostData.total.edge = energy_metrics.value.totals.edge.cost;
-                        energyCostData.total.cloud = energy_metrics.value.totals.cloud.cost;
-                        energyCostData.unit = energy_metrics.value.unit.cost;
-
-                        dialogData.value = energyCostData;
+                        dialogData.value = energy_cost.value;
                         dialog_Heading.value = 'Energy Cost';
+
+                        const edgeSubset = energy_cost.value.edge.slice(0, 10);
+                        const cloudSubset = energy_cost.value.cloud.slice(0, 10);
+                        const labels = edgeSubset.map(item => item.id);
+                        const edgeData = edgeSubset.map(item => item.cost);
+                        const cloudData = cloudSubset.map(item => item.cost);
+
+                        setTimeout(() => {
+                            renderChart(edgeData, cloudData, labels);
+                        }, 200);
                     };
 
                     // New function for Waiting Time
@@ -784,11 +783,89 @@
                         // return rows;
                     }
 
+                    // Add a variable to store the chart instance (to prevent duplicates)
+                    let myChartInstance = null;
+
+                    onMounted(() => {
+                        // console.log(chartCanvas.value, "chartCanvas");
+                        // if (chartCanvas.value) {
+                        //     renderChart();
+                        // }
+                    });
+
+                    const renderChart = (edgeData, cloudData, labels) => {
+
+                        console.log(edgeData, cloudData, "data in renderChart function");
+
+
+
+                        if (chartCanvas.value) {
+                            if (myChartInstance) {
+                                myChartInstance.destroy();
+                            }
+
+                            myChartInstance = new Chart(chartCanvas.value, {
+                                type: 'line',
+                                data: {
+                                    labels: labels,
+                                    datasets: [
+                                        {
+                                            label: 'Edge Computing (Dynamic)',
+                                            data: edgeData,
+                                            borderColor: '#10b981',
+                                            backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                                            borderWidth: 3,
+                                            tension: 0.4,
+                                            pointRadius: 4,
+                                            fill: true
+                                        },
+                                        {
+                                            label: 'Cloud Computing (Dynamic)',
+                                            data: cloudData,
+                                            borderColor: '#3b82f6',
+                                            backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                                            borderWidth: 3,
+                                            tension: 0.4,
+                                            pointRadius: 4,
+                                            fill: true
+                                        }
+                                    ]
+                                },
+                                options: {
+                                    responsive: true,
+                                    maintainAspectRatio: true,
+                                    plugins: {
+                                        legend: { position: 'top' },
+                                        tooltip: { mode: 'index', intersect: false }
+                                    },
+                                    scales: {
+                                        y: {
+                                            beginAtZero: true,
+                                            title: { display: true, text: 'Processing Time (s)' },
+                                            grid: { color: 'rgba(0,0,0,0.05)' }
+                                        },
+                                        x: {
+                                            grid: { display: false }
+                                        }
+                                    }
+                                }
+                            });
+                        }
+                    };
+
+
+
 
                     return {
                         data,
                         loading,
                         error,
+                        energy_usage,
+                        energy_cost,
+
+                        execution_cost,
+                        execution_time,
+
                         handleFileUpload,
                         displayTransmissionTime,
                         displayTransmissionCost,
@@ -808,7 +885,7 @@
                         totalFinalTransmissionTimeCloud,
                         totalFinalTransmissionTimeEdge,
                         vendorTotalVendorTime,
-
+                        chartCanvas,
                         averageFinalTransmissionTimeCloud,
                         averageFinalTransmissionTimeEdge,
                         averageTotalVendorTime
@@ -821,6 +898,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq"
         crossorigin="anonymous"></script>
+
 </body>
 
 </html>

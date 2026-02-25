@@ -3,16 +3,13 @@ import { CreateEdgeServerDto } from './dto/create-edge-server.dto';
 import { ref_values } from '../util/util-data/reference-values';
 import { compareTransmissionTimes } from './util-functions/transmissionTime';
 import { cloudServer, edgeServer } from './dto/servers.data';
-import { calculateTransmissionCost } from './util-functions/transmissionCost';
 import { calculateQueuingTime } from './util-functions/transmissionWaitingTime';
-import { calculateExecutionMetrics } from './util-functions/transmission-execution';
-import { calculateEnergyUsageAndCost } from './util-functions/energy_metrics';
+import { calculateEnergyCost, calculateEnergyUsage } from './util-functions/energy_metrics';
+import { compareTransmissionCosts } from './util-functions/transmissionCost';
+import { compareExecutionCost, compareExecutionTime } from './util-functions/transmission-execution';
 
 @Injectable()
 export class EdgeServersService {
-  create(createEdgeServerDto: CreateEdgeServerDto) {
-    return 'This action adds a new edgeServer';
-  }
 
   runtest(data) {
     let result = [];
@@ -28,17 +25,30 @@ export class EdgeServersService {
     }
 
     let transmission_time = compareTransmissionTimes(data, edgeServer, cloudServer)
-    let transmission_cost = calculateTransmissionCost(data, edgeServer, cloudServer)
+    let transmission_cost = compareTransmissionCosts(data, edgeServer, cloudServer)
     let transmission_queuing_time = calculateQueuingTime(data, edgeServer, cloudServer,);
-    let executions_metrics = calculateExecutionMetrics(data, edgeServer, cloudServer);
-    let energy_usage_and_cost = calculateEnergyUsageAndCost(data, edgeServer, cloudServer);
+
+
+    let execution_cost = compareExecutionCost(data, edgeServer, cloudServer);
+    let execution_time = compareExecutionTime(data, edgeServer, cloudServer);
+
+
+    let energy_usage = calculateEnergyUsage(data, edgeServer, cloudServer);
+    let energy_cost = calculateEnergyCost(energy_usage.results, edgeServer.costPerKWh, cloudServer.costPerKWh);
+    let energy_usage_and_cost = {
+      ...energy_usage,
+      ...energy_cost
+    };
     return {
       health_parameter: result,
       transmission_time: transmission_time,
       transmission_cost: transmission_cost,
       transmission_queuing_time: transmission_queuing_time,
-      executions_metrics: executions_metrics,
-      energy_usage_and_cost: energy_usage_and_cost
+      execution_time: execution_time,
+      execution_cost: execution_cost,
+      energy_usage_and_cost: energy_usage_and_cost,
+      energy_usage: energy_usage,
+      energy_cost: energy_cost,
     };
   }
 
