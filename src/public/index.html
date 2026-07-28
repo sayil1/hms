@@ -321,9 +321,9 @@
                                         <tr>
                                             <th rowspan="2">Metric</th>
                                             <th colspan="2">My Framework (Optimized)</th>
-                                            <th colspan="2">DPTARA</th>
-                                            <th colspan="2">3rd Framework</th>
-                                            <th colspan="2">4th Framework</th>
+                                            <th colspan="2">DPTARAsss</th>
+                                            <th colspan="2">EdgeSched-DQN</th>
+                                            <th colspan="2">Iko-Ojo Framework</th>
                                         </tr>
                                         <tr>
                                             <th>Cloud</th>
@@ -343,12 +343,14 @@
                                             <td>{{ dialogData.total.cloud }} {{
                                                 dialogData.unit }}</td>
                                             <td>{{ dialogData.total.edge }} {{ dialogData.unit }}</td>
-                                            <td>-</td>
-                                            <td>-</td>
-                                            <td>-</td>
-                                            <td>-</td>
-                                            <td>-</td>
-                                            <td>-</td>
+                                            <td>{{ dptaraComparison ? dptaraComparison.total.cloud : '-' }} {{
+                                                dptaraComparison ? dptaraComparison.unit : '' }}</td>
+                                            <td>{{ dptaraComparison ? dptaraComparison.total.edge : '-' }} {{
+                                                dptaraComparison ? dptaraComparison.unit : '' }}</td>
+                                            <td>{{ edgeSchedComparison ? edgeSchedComparison.total.cloud : '-' }} {{ edgeSchedComparison ? edgeSchedComparison.unit : '' }}</td>
+                                            <td>{{ edgeSchedComparison ? edgeSchedComparison.total.edge : '-' }} {{ edgeSchedComparison ? edgeSchedComparison.unit : '' }}</td>
+                                            <td>{{ ikoOjoComparison ? ikoOjoComparison.total.cloud : '-' }} {{ ikoOjoComparison ? ikoOjoComparison.unit : '' }}</td>
+                                            <td>{{ ikoOjoComparison ? ikoOjoComparison.total.edge : '-' }} {{ ikoOjoComparison ? ikoOjoComparison.unit : '' }}</td>
                                         </tr>
 
                                         <tr>
@@ -356,12 +358,14 @@
                                             <td>{{ dialogData.averages.cloud }} {{
                                                 dialogData.unit }}</td>
                                             <td>{{ dialogData.averages.edge }} {{ dialogData.unit }}</td>
-                                            <td>-</td>
-                                            <td>-</td>
-                                            <td>-</td>
-                                            <td>-</td>
-                                            <td>-</td>
-                                            <td>-</td>
+                                            <td>{{ dptaraComparison ? dptaraComparison.averages.cloud : '-' }} {{
+                                                dptaraComparison ? dptaraComparison.unit : '' }}</td>
+                                            <td>{{ dptaraComparison ? dptaraComparison.averages.edge : '-' }} {{
+                                                dptaraComparison ? dptaraComparison.unit : '' }}</td>
+                                            <td>{{ edgeSchedComparison ? edgeSchedComparison.averages.cloud : '-' }} {{ edgeSchedComparison ? edgeSchedComparison.unit : '' }}</td>
+                                            <td>{{ edgeSchedComparison ? edgeSchedComparison.averages.edge : '-' }} {{ edgeSchedComparison ? edgeSchedComparison.unit : '' }}</td>
+                                            <td>{{ ikoOjoComparison ? ikoOjoComparison.averages.cloud : '-' }} {{ ikoOjoComparison ? ikoOjoComparison.unit : '' }}</td>
+                                            <td>{{ ikoOjoComparison ? ikoOjoComparison.averages.edge : '-' }} {{ ikoOjoComparison ? ikoOjoComparison.unit : '' }}</td>
                                         </tr>
 
                                         <tr>
@@ -372,10 +376,13 @@
                                                     dialogData.total.edge }}</strong>
                                             </td>
                                             <td colspan="2">
+                                                Cloud Total ({{ dptaraComparison ? dptaraComparison.total.cloud : '-' }}) + Edge Total ({{ dptaraComparison ? dptaraComparison.total.edge : '-' }}) = <strong>{{ dptaraComparison ? dptaraComparison.total.cloud + dptaraComparison.total.edge : '-' }}</strong>
                                             </td>
                                             <td colspan="2">
+                                                Cloud Total ({{ edgeSchedComparison ? edgeSchedComparison.total.cloud : '-' }}) + Edge Total ({{ edgeSchedComparison ? edgeSchedComparison.total.edge : '-' }}) = <strong>{{ edgeSchedComparison ? edgeSchedComparison.total.cloud + edgeSchedComparison.total.edge : '-' }}</strong>
                                             </td>
                                             <td colspan="2">
+                                                Cloud Total ({{ ikoOjoComparison ? ikoOjoComparison.total.cloud : '-' }}) + Edge Total ({{ ikoOjoComparison ? ikoOjoComparison.total.edge : '-' }}) = <strong>{{ ikoOjoComparison ? ikoOjoComparison.total.cloud + ikoOjoComparison.total.edge : '-' }}</strong>
                                             </td>
                                         </tr>
 
@@ -388,10 +395,13 @@
                                                     }}</strong>
                                             </td>
                                             <td colspan="2">
+                                                Cloud Average {{ dptaraComparison ? dptaraComparison.averages.cloud : '-' }} + Edge Average {{ dptaraComparison ? dptaraComparison.averages.edge : '-' }} ÷ 2 = <strong>{{ dptaraComparison ? (dptaraComparison.averages.cloud + dptaraComparison.averages.edge) / 2 : '-' }}</strong>
                                             </td>
                                             <td colspan="2">
+                                                Cloud Average {{ edgeSchedComparison ? edgeSchedComparison.averages.cloud : '-' }} + Edge Average {{ edgeSchedComparison ? edgeSchedComparison.averages.edge : '-' }} ÷ 2 = <strong>{{ edgeSchedComparison ? (edgeSchedComparison.averages.cloud + edgeSchedComparison.averages.edge) / 2 : '-' }}</strong>
                                             </td>
                                             <td colspan="2">
+                                                Cloud Average {{ ikoOjoComparison ? ikoOjoComparison.averages.cloud : '-' }} + Edge Average {{ ikoOjoComparison ? ikoOjoComparison.averages.edge : '-' }} ÷ 2 = <strong>{{ ikoOjoComparison ? (ikoOjoComparison.averages.cloud + ikoOjoComparison.averages.edge) / 2 : '-' }}</strong>
                                             </td>
                                         </tr>
                                     </tbody>
@@ -557,6 +567,12 @@
                     const loading = ref(false);
                     const error = ref(null);
                     const dialogData = ref(null);
+                    const dptara_metrics = ref(null);
+                    const dptaraComparison = ref(null);
+                    const edgeSched_metrics = ref(null);
+                    const edgeSchedComparison = ref(null);
+                    const ikoOjo_metrics = ref(null);
+                    const ikoOjoComparison = ref(null);
                     const transmission_time = ref(null);
                     const transmission_cost = ref(null);
                     const executions_metrics = ref(null);
@@ -575,6 +591,114 @@
                     const averageFinalTransmissionTimeEdge = ref(null);
                     const averageTotalVendorTime = ref(null);
 
+                    const updateDptaraComparison = (metricKey) => {
+                        if (!dptara_metrics.value) {
+                            dptaraComparison.value = null;
+                            return;
+                        }
+
+                        const metricMap = {
+                            transmission_time: { unit: 'seconds', cloud: 'transmissionTimeSeconds', edge: 'transmissionTimeSeconds' },
+                            transmission_cost: { unit: 'USD', cloud: 'transmissionCost', edge: 'transmissionCost' },
+                            execution_time: { unit: 'seconds', cloud: 'executionTimeSeconds', edge: 'executionTimeSeconds' },
+                            execution_cost: { unit: 'USD', cloud: 'executionCost', edge: 'executionCost' },
+                            energy_usage: { unit: 'kWh', cloud: 'energyUsageKWh', edge: 'energyUsageKWh' },
+                            energy_cost: { unit: 'USD', cloud: 'energyUsageCost', edge: 'energyUsageCost' },
+                            waiting_time: { unit: 'seconds', cloud: 'waitingTimeSeconds', edge: 'waitingTimeSeconds' },
+                            waiting_cost: { unit: 'USD', cloud: 'waitingTimeCost', edge: 'waitingTimeCost' },
+                        };
+
+                        const selected = metricMap[metricKey];
+                        if (!selected) {
+                            dptaraComparison.value = null;
+                            return;
+                        }
+
+                        dptaraComparison.value = {
+                            unit: selected.unit,
+                            total: {
+                                cloud: dptara_metrics.value.cloud?.totals?.[selected.cloud] ?? 0,
+                                edge: dptara_metrics.value.edge?.totals?.[selected.edge] ?? 0,
+                            },
+                            averages: {
+                                cloud: dptara_metrics.value.cloud?.averages?.[selected.cloud] ?? 0,
+                                edge: dptara_metrics.value.edge?.averages?.[selected.edge] ?? 0,
+                            },
+                        };
+                    };
+
+                    const updateEdgeSchedComparison = (metricKey) => {
+                        if (!edgeSched_metrics.value) {
+                            edgeSchedComparison.value = null;
+                            return;
+                        }
+
+                        const metricMap = {
+                            transmission_time: { unit: 'seconds', cloud: 'transmissionTimeSeconds', edge: 'transmissionTimeSeconds' },
+                            transmission_cost: { unit: 'USD', cloud: 'transmissionCost', edge: 'transmissionCost' },
+                            execution_time: { unit: 'seconds', cloud: 'executionTimeSeconds', edge: 'executionTimeSeconds' },
+                            execution_cost: { unit: 'USD', cloud: 'executionCost', edge: 'executionCost' },
+                            energy_usage: { unit: 'kWh', cloud: 'energyUsageKWh', edge: 'energyUsageKWh' },
+                            energy_cost: { unit: 'USD', cloud: 'energyUsageCost', edge: 'energyUsageCost' },
+                            waiting_time: { unit: 'seconds', cloud: 'waitingTimeSeconds', edge: 'waitingTimeSeconds' },
+                            waiting_cost: { unit: 'USD', cloud: 'waitingTimeCost', edge: 'waitingTimeCost' },
+                        };
+
+                        const selected = metricMap[metricKey];
+                        if (!selected) {
+                            edgeSchedComparison.value = null;
+                            return;
+                        }
+
+                        edgeSchedComparison.value = {
+                            unit: selected.unit,
+                            total: {
+                                cloud: edgeSched_metrics.value.cloud?.totals?.[selected.cloud] ?? 0,
+                                edge: edgeSched_metrics.value.edge?.totals?.[selected.edge] ?? 0,
+                            },
+                            averages: {
+                                cloud: edgeSched_metrics.value.cloud?.averages?.[selected.cloud] ?? 0,
+                                edge: edgeSched_metrics.value.edge?.averages?.[selected.edge] ?? 0,
+                            },
+                        };
+                    };
+
+                    const updateIkoOjoComparison = (metricKey) => {
+                        if (!ikoOjo_metrics.value) {
+                            ikoOjoComparison.value = null;
+                            return;
+                        }
+
+                        const metricMap = {
+                            transmission_time: { unit: 'seconds', cloud: 'transmissionTimeSeconds', edge: 'transmissionTimeSeconds' },
+                            transmission_cost: { unit: 'USD', cloud: 'transmissionCost', edge: 'transmissionCost' },
+                            execution_time: { unit: 'seconds', cloud: 'executionTimeSeconds', edge: 'executionTimeSeconds' },
+                            execution_cost: { unit: 'USD', cloud: 'executionCost', edge: 'executionCost' },
+                            energy_usage: { unit: 'kWh', cloud: 'energyUsageKWh', edge: 'energyUsageKWh' },
+                            energy_cost: { unit: 'USD', cloud: 'energyUsageCost', edge: 'energyUsageCost' },
+                            waiting_time: { unit: 'seconds', cloud: 'waitingTimeSeconds', edge: 'waitingTimeSeconds' },
+                            waiting_cost: { unit: 'USD', cloud: 'waitingTimeCost', edge: 'waitingTimeCost' },
+                        };
+
+                        const selected = metricMap[metricKey];
+                        if (!selected) {
+                            ikoOjoComparison.value = null;
+                            return;
+                        }
+
+                        ikoOjoComparison.value = {
+                            unit: selected.unit,
+                            total: {
+                                cloud: ikoOjo_metrics.value.cloud?.totals?.[selected.cloud] ?? 0,
+                                edge: ikoOjo_metrics.value.edge?.totals?.[selected.edge] ?? 0,
+                            },
+                            averages: {
+                                cloud: ikoOjo_metrics.value.cloud?.averages?.[selected.cloud] ?? 0,
+                                edge: ikoOjo_metrics.value.edge?.averages?.[selected.edge] ?? 0,
+                            },
+                        };
+                    };
+
                     const handleFileUpload = async (event) => {
                         const file = event.target.files[0];
                         if (file) {
@@ -591,8 +715,11 @@
                                 transmission_time.value = response.data.transmission_time;
                                 transmission_cost.value = response.data.transmission_cost;
                                 executions_metrics.value = response.data.executions_metrics;
-                                energy_metrics.value = response.data.energy_metrics;
+                                energy_metrics.value = response.data.energy_usage_and_cost || response.data.energy_metrics;
                                 waiting_metrics.value = response.data.transmission_queuing_time;
+                                dptara_metrics.value = response.data.dptara_metrics;
+                                edgeSched_metrics.value = response.data.edgeSched_metrics || response.data.edgeSchedMetrics || null;
+                                ikoOjo_metrics.value = response.data.ikoOjo_metrics || response.data.ikoOjoMetrics || null;
 
                                 totalFinalTransmissionCostCloud.value = response.data.transmission_cost.total.cloud;
                                 totalFinalTransmissionCostEdge.value = response.data.transmission_cost.total.edge;
@@ -616,41 +743,50 @@
                     const displayTransmissionTime = () => {
                         dialogData.value = transmission_time.value;
                         dialog_Heading.value = 'Transmission Time';
+                        updateDptaraComparison('transmission_time');
+                        updateEdgeSchedComparison('transmission_time');
+                        updateIkoOjoComparison('transmission_time');
                     };
 
                     const displayTransmissionCost = () => {
                         dialogData.value = transmission_cost.value;
                         dialog_Heading.value = 'Transmission Cost';
+                        updateDptaraComparison('transmission_cost');
+                        updateEdgeSchedComparison('transmission_cost');
+                        updateIkoOjoComparison('transmission_cost');
                     };
 
                     const displayExecutionsMetricsTime = () => {
-                        if (!executions_metrics.value) return;
+                        if (!executions_metrics.value?.results) return;
 
                         const execTimeData = JSON.parse(JSON.stringify(executions_metrics.value));
 
                         execTimeData.results.forEach(result => {
-                            result.edge = result.edge.execTime;
-                            result.cloud = result.cloud.execTime;
+                            result.edge = result.edge?.execTime;
+                            result.cloud = result.cloud?.execTime;
                         });
 
-                        execTimeData.averages.edge = executions_metrics.value.averages.edgeTime;
-                        execTimeData.averages.cloud = executions_metrics.value.averages.cloudTime;
+                        execTimeData.averages.edge = executions_metrics.value.averages.edgeExecTime;
+                        execTimeData.averages.cloud = executions_metrics.value.averages.cloudExecTime;
                         execTimeData.total.edge = executions_metrics.value.total.edgeExecTime;
                         execTimeData.total.cloud = executions_metrics.value.total.cloudExecTime;
-                        execTimeData.unit = 'ms';
+                        execTimeData.unit = 'seconds';
 
                         dialogData.value = execTimeData;
                         dialog_Heading.value = 'Execution Time';
+                        updateDptaraComparison('execution_time');
+                        updateEdgeSchedComparison('execution_time');
+                        updateIkoOjoComparison('execution_time');
                     };
 
                     const displayExecutionsMetricsCost = () => {
-                        if (!executions_metrics.value) return;
+                        if (!executions_metrics.value?.results) return;
 
                         const execCostData = JSON.parse(JSON.stringify(executions_metrics.value));
 
                         execCostData.results.forEach(result => {
-                            result.edge = result.edge.cost;
-                            result.cloud = result.cloud.cost;
+                            result.edge = result.edge?.cost;
+                            result.cloud = result.cloud?.cost;
                         });
 
                         execCostData.averages.edge = executions_metrics.value.averages.edgeCost;
@@ -661,46 +797,55 @@
 
                         dialogData.value = execCostData;
                         dialog_Heading.value = 'Execution Cost';
+                        updateDptaraComparison('execution_cost');
+                        updateEdgeSchedComparison('execution_cost');
+                        updateIkoOjoComparison('execution_cost');
                     };
 
                     const displayEnergyUsage = () => {
-                        if (!energy_metrics.value) return;
+                        if (!energy_metrics.value?.results) return;
 
                         const energyUsageData = JSON.parse(JSON.stringify(energy_metrics.value));
 
                         energyUsageData.results.forEach(result => {
-                            result.edge = result.edge.energy;
-                            result.cloud = result.cloud.energy;
+                            result.edge = result.edge?.energyUsed;
+                            result.cloud = result.cloud?.energyUsed;
                         });
 
                         energyUsageData.averages.edge = energy_metrics.value.averages.edge.energy;
                         energyUsageData.averages.cloud = energy_metrics.value.averages.cloud.energy;
-                        energyUsageData.total.edge = energy_metrics.value.totals.edge.energy;
-                        energyUsageData.total.cloud = energy_metrics.value.totals.cloud.energy;
+                        energyUsageData.total.edge = energy_metrics.value.total.edge.energy;
+                        energyUsageData.total.cloud = energy_metrics.value.total.cloud.energy;
                         energyUsageData.unit = energy_metrics.value.unit.energy;
 
                         dialogData.value = energyUsageData;
                         dialog_Heading.value = 'Energy Usage';
+                        updateDptaraComparison('energy_usage');
+                        updateEdgeSchedComparison('energy_usage');
+                        updateIkoOjoComparison('energy_usage');
                     };
 
                     const displayEnergyCost = () => {
-                        if (!energy_metrics.value) return;
+                        if (!energy_metrics.value?.results) return;
 
                         const energyCostData = JSON.parse(JSON.stringify(energy_metrics.value));
 
                         energyCostData.results.forEach(result => {
-                            result.edge = result.edge.cost;
-                            result.cloud = result.cloud.cost;
+                            result.edge = result.edge?.energyCost;
+                            result.cloud = result.cloud?.energyCost;
                         });
 
                         energyCostData.averages.edge = energy_metrics.value.averages.edge.cost;
                         energyCostData.averages.cloud = energy_metrics.value.averages.cloud.cost;
-                        energyCostData.total.edge = energy_metrics.value.totals.edge.cost;
-                        energyCostData.total.cloud = energy_metrics.value.totals.cloud.cost;
+                        energyCostData.total.edge = energy_metrics.value.total.edge.cost;
+                        energyCostData.total.cloud = energy_metrics.value.total.cloud.cost;
                         energyCostData.unit = energy_metrics.value.unit.cost;
 
                         dialogData.value = energyCostData;
                         dialog_Heading.value = 'Energy Cost';
+                        updateDptaraComparison('energy_cost');
+                        updateEdgeSchedComparison('energy_cost');
+                        updateIkoOjoComparison('energy_cost');
                     };
 
                     // New function for Waiting Time
@@ -722,6 +867,9 @@
 
                         dialogData.value = waitingTimeData;
                         dialog_Heading.value = 'Waiting Time';
+                        updateDptaraComparison('waiting_time');
+                        updateEdgeSchedComparison('waiting_time');
+                        updateIkoOjoComparison('waiting_time');
                     };
 
                     // New function for Waiting Cost
@@ -743,6 +891,9 @@
 
                         dialogData.value = waitingCostData;
                         dialog_Heading.value = 'Waiting Cost';
+                        updateDptaraComparison('waiting_cost');
+                        updateEdgeSchedComparison('waiting_cost');
+                        updateIkoOjoComparison('waiting_cost');
                     };
 
 
@@ -794,6 +945,12 @@
                         displayWaitingTime,
                         displayWaitingCost,
                         dialogData,
+                        dptara_metrics,
+                        dptaraComparison,
+                        edgeSched_metrics,
+                        edgeSchedComparison,
+                        ikoOjo_metrics,
+                        ikoOjoComparison,
                         overall,
                         dialog_Heading,
                         showOverall,

@@ -42,6 +42,7 @@ export interface CheckHealthParameterInput {
   sex: 'male' | 'female';
   key: string;
   inputValues: HealthInputValues;
+  cpu_cycles?: number;
 }
 
 export interface CheckResult {

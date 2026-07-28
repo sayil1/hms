@@ -1,12 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import { CreateEdgeServerDto } from './dto/create-edge-server.dto';
 import { ref_values } from '../util/util-data/reference-values';
-import { compareTransmissionTimes } from './util-functions/transmissionTime';
 import { cloudServer, edgeServer } from './dto/servers.data';
 import { calculateTransmissionCost } from './util-functions/transmissionCost';
 import { calculateQueuingTime } from './util-functions/transmissionWaitingTime';
 import { calculateExecutionMetrics } from './util-functions/transmission-execution';
 import { calculateEnergyUsageAndCost } from './util-functions/energy_metrics';
+import { calculateDptaraMetrics } from './util-functions/simulateDptarawordload';
+import { calculateEdgeSchedMetrics } from './util-functions/edgesched-dqn';
+import { calculateIkoOjoMetrics } from './util-functions/iko-ojo-framework';
+import { compareTransmissionTimes } from './util-functions/transmissionTime';
 
 @Injectable()
 export class EdgeServersService {
@@ -32,13 +35,20 @@ export class EdgeServersService {
     let transmission_queuing_time = calculateQueuingTime(data, edgeServer, cloudServer,);
     let executions_metrics = calculateExecutionMetrics(data, edgeServer, cloudServer);
     let energy_usage_and_cost = calculateEnergyUsageAndCost(data, edgeServer, cloudServer);
+    let dptara_metrics = calculateDptaraMetrics(data);
+    let edgeSched_metrics = calculateEdgeSchedMetrics(data);
+    let ikoOjo_metrics = calculateIkoOjoMetrics(data);
     return {
       health_parameter: result,
       transmission_time: transmission_time,
       transmission_cost: transmission_cost,
       transmission_queuing_time: transmission_queuing_time,
       executions_metrics: executions_metrics,
-      energy_usage_and_cost: energy_usage_and_cost
+      energy_usage_and_cost: energy_usage_and_cost,
+      dptara_metrics: dptara_metrics,
+      edgeSched_metrics: edgeSched_metrics
+      ,
+      ikoOjo_metrics: ikoOjo_metrics
     };
   }
 

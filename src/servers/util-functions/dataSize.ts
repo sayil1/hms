@@ -12,5 +12,6 @@ export function estimateDataSizeFromBinary(input: CheckHealthParameterInput): nu
     const bytes = numValues * 8;
     const overhead = 50;
     const totalBytes = bytes + overhead;
-    return parseFloat((totalBytes / (1024 * 1024)).toFixed(6)) * 100000;
+    // return size in megabytes (MB)
+    return parseFloat((totalBytes / (1024 * 1024)).toFixed(6));
 }
