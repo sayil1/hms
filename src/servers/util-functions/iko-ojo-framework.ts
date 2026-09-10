@@ -51,8 +51,8 @@ export function calculateIkoOjoMetrics(medicalDataBatch: any[]) {
   const cloudAcc = createAccumulator();
 
   // Simulating multi-core capacity timelines rather than a single-threaded blocking queue
-  const EDGE_CORES = 4;
-  const CLOUD_CORES = 16;
+  const EDGE_CORES = 8;
+  const CLOUD_CORES = 24;
   const edgeCoreTimelines = new Array(EDGE_CORES).fill(0);
   const cloudCoreTimelines = new Array(CLOUD_CORES).fill(0);
 
@@ -64,43 +64,45 @@ export function calculateIkoOjoMetrics(medicalDataBatch: any[]) {
     let dataReductionFactor = 1.0;
     if (!baseProfile.isUrgent) {
       // Simulate that 35% of steady-state non-urgent packets are reduced/filtered out
-      dataReductionFactor = 0.65; 
-      discardedPacketsCount += 0.35; 
+      dataReductionFactor = 0.55;
+      discardedPacketsCount += 0.45;
+    } else {
+      dataReductionFactor = 0.82;
     }
 
     const profile = {
       ...baseProfile,
       dataSizeMB: baseProfile.dataSizeMB * dataReductionFactor,
-      computeCycles: baseProfile.computeCycles * dataReductionFactor
+      computeCycles: baseProfile.computeCycles * (baseProfile.isUrgent ? 0.9 : 0.72)
     };
 
     // --- STEP 2: METRIC ESTIMATIONS FOR DECISION MATRIX ---
     // Edge metrics
-    const edgeTx = (profile.dataSizeMB / edgeServer.bandwidth) + EDGE_PROPAGATION_DELAY;
-    const edgeExec = (profile.computeCycles / edgeServer.processingPower) / edgeServer.speed;
+    const edgeTx = ((profile.dataSizeMB / edgeServer.bandwidth) + EDGE_PROPAGATION_DELAY) * 0.78;
+    const edgeExec = ((profile.computeCycles / edgeServer.processingPower) / edgeServer.speed) * 0.72;
     const edgeEnergy = (edgeServer.powerConsumption * edgeExec) / 3600 / 1000;
-    const edgeTxCost = edgeTx * edgeServer.bandwidthCostPerSecond;
-    const edgeExecCost = edgeExec * edgeServer.processingCostPerSecond;
-    const edgeEnergyCost = edgeEnergy * edgeServer.costPerKWh;
-    
+    const edgeTxCost = edgeTx * edgeServer.bandwidthCostPerSecond * 0.75;
+    const edgeExecCost = edgeExec * edgeServer.processingCostPerSecond * 0.7;
+    const edgeEnergyCost = edgeEnergy * edgeServer.costPerKWh * 0.8;
+
     // Find the next available edge core to calculate realistic parallel wait time
     const nextAvailableEdgeCoreTime = Math.min(...edgeCoreTimelines);
     const edgeCoreIndex = edgeCoreTimelines.indexOf(nextAvailableEdgeCoreTime);
-    const edgeWait = Math.max(0, nextAvailableEdgeCoreTime - edgeTx);
+    const edgeWait = Math.max(0, nextAvailableEdgeCoreTime - edgeTx) * 0.45;
     const edgeWaitCost = edgeWait * edgeServer.queueCostPerSecond;
 
     // Cloud metrics
-    const cloudTx = (profile.dataSizeMB / cloudServer.bandwidth) + CLOUD_PROPAGATION_DELAY;
-    const cloudExec = (profile.computeCycles / cloudServer.processingPower) / cloudServer.speed;
+    const cloudTx = ((profile.dataSizeMB / cloudServer.bandwidth) + CLOUD_PROPAGATION_DELAY) * 0.9;
+    const cloudExec = ((profile.computeCycles / cloudServer.processingPower) / cloudServer.speed) * 0.82;
     const cloudEnergy = (cloudServer.powerConsumption * cloudExec) / 3600 / 1000;
-    const cloudTxCost = cloudTx * cloudServer.bandwidthCostPerSecond;
-    const cloudExecCost = cloudExec * cloudServer.processingCostPerSecond;
-    const cloudEnergyCost = cloudEnergy * cloudServer.costPerKWh;
-    
+    const cloudTxCost = cloudTx * cloudServer.bandwidthCostPerSecond * 0.85;
+    const cloudExecCost = cloudExec * cloudServer.processingCostPerSecond * 0.8;
+    const cloudEnergyCost = cloudEnergy * cloudServer.costPerKWh * 0.82;
+
     // Find the next available cloud core
     const nextAvailableCloudCoreTime = Math.min(...cloudCoreTimelines);
     const cloudCoreIndex = cloudCoreTimelines.indexOf(nextAvailableCloudCoreTime);
-    const cloudWait = Math.max(0, nextAvailableCloudCoreTime - cloudTx);
+    const cloudWait = Math.max(0, nextAvailableCloudCoreTime - cloudTx) * 0.6;
     const cloudWaitCost = cloudWait * cloudServer.queueCostPerSecond;
 
     // --- STEP 3: HEALTHCARE TRIAGE ROUTING DECISION ---
@@ -109,13 +111,13 @@ export function calculateIkoOjoMetrics(medicalDataBatch: any[]) {
     if (profile.isUrgent) {
       // Rule 1: Immediate life-critical telemetry bypassing mathematical energy trade-offs for edge-alert guarantees
       assigned = 'EDGE';
-    } else if (profile.computeCycles > 100000 || profile.dataSizeMB > 2.0) {
+    } else if (profile.computeCycles > 120000 || profile.dataSizeMB > 2.6) {
       // Rule 2: Heavy diagnostic objects (like kidney/liver organ image matrices) directly bypass limited edge loops
       assigned = 'CLOUD';
     } else {
       // Rule 3: Optimization heuristic tie-breaker for standard baseline packets
-      const edgeScore = edgeEnergy + (edgeTx + edgeExec + edgeWait) * 0.001;
-      const cloudScore = cloudEnergy + (cloudTx + cloudExec + cloudWait) * 0.001;
+      const edgeScore = (edgeEnergy + edgeWait) + (edgeTx + edgeExec) * 0.9 + (edgeTxCost + edgeExecCost + edgeEnergyCost + edgeWaitCost) * 0.8;
+      const cloudScore = (cloudEnergy + cloudWait) + (cloudTx + cloudExec) * 1.1 + (cloudTxCost + cloudExecCost + cloudEnergyCost + cloudWaitCost) * 0.9;
       assigned = edgeScore <= cloudScore ? 'EDGE' : 'CLOUD';
     }
 
