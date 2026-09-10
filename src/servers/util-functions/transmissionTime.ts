@@ -26,8 +26,9 @@ export function compareTransmissionTimes(
 
     const results: TaskResult[] = inputs.map((input, index) => {
         const dataSizeMB = estimateDataSizeFromBinary(input);
-        const edgeTime = dataSizeMB / edge.bandwidth;
-        const cloudTime = (dataSizeMB / edge.bandwidth) + (dataSizeMB / cloud.bandwidth);
+
+        const edgeTime = (dataSizeMB / edge.bandwidth) + 0.0015;
+        const cloudTime = (dataSizeMB / cloud.bandwidth) + 0.06 + (dataSizeMB * 0.004);
 
         const noise = (Math.floor(Math.random() * 201) - 100) * 0.00001;
         const isEdgeBetter = edgeTime < (cloudTime + noise);
